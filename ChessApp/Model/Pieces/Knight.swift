@@ -11,7 +11,7 @@ import Foundation
 
 class Knight: Piece {
     
-  override init(isWhite: Bool) {
+    override init(isWhite: Bool) {
         super.init(isWhite: isWhite)
     }
     

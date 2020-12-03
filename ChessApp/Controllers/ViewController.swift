@@ -15,11 +15,11 @@ class ViewController: UIViewController {
         
         let board = Board()
         
-        for arr in board.squares {
-            for square in arr {
-                print(square.piece)
-            }
-        }
+//        for arr in board.squares {
+//            for square in arr {
+//                print(square.piece)
+//            }
+//        }
         
     }
 

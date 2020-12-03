@@ -36,4 +36,8 @@ public class Piece: Coordinates {
         return false
     }
     
+    final public func equalColor(_ piece: Piece) -> Bool {
+        return (self.isWhite && piece.isWhite) || (!self.isWhite && !piece.isWhite)
+    }
+    
 }

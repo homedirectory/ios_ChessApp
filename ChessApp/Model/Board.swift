@@ -12,16 +12,18 @@ import Foundation
 public class Board {
     
     static let MAXROW: Int = 7
-//    static let BOARDSIZE: Int = 64
     
     var pieces: [Piece] = []
     var squares: [[Square]] = []
+    var whiteKing: King? = nil
+    var blackKing: King? = nil
     
     init() {
         fillBoardWithEmptySquares()
-        print(self.squares)
         fillBoardWithPieces()
     }
+    
+    // MARK: - Setup
     
     private func fillBoardWithEmptySquares() {
         for rowIndex in 0...Board.MAXROW {
@@ -62,7 +64,15 @@ public class Board {
             
             //create queen and king
             self.squares[row][3].piece = Queen(isWhite: isWhite)
-            self.squares[row][4].piece = King(isWhite: isWhite)
+            
+            if isWhite {
+                self.whiteKing = King(isWhite: isWhite)
+                self.squares[row][4].piece = self.whiteKing
+            } else {
+                self.blackKing = King(isWhite: isWhite)
+                self.squares[row][4].piece = self.blackKing
+            }
+            
             
             //change settings for black pieces
             row = 6
@@ -70,6 +80,67 @@ public class Board {
         }
     }
     
-//    public func
+    // MARK: - Logic
+    
+    func movePiece(from fromSquare: Square, to toSquare: Square) {
+        
+        
+    }
+    
+    func isValidMove(from fromSquare: Square, to toSquare: Square) -> Bool {
+                
+        // 1) Check if fromSquare contains a piece
+        guard let fromPiece = fromSquare.piece else {
+            return false
+        }
+        
+        // 2) Check if this piece can move like that
+        if !fromPiece.isValidMove(toCoordinates: toSquare.coordinates) {
+            return false
+        }
+        
+        // 3) TODO: Check if the King is under check
+        if kingUnderCheck(isWhite: fromPiece.isWhite) {
+            // check if this move protects the king
+        }
+        
+        // 4) Check the toSquare
+            // contains a piece of the same color: return
+            // contains a piece of different color: continue
+            // isEmpty: continue
+        if !toSquare.isEmpty {
+            let toPiece = toSquare.piece!
+            if toPiece.equalColor(fromPiece) {
+                return false
+            }
+            // TODO: Check if this move puts the King under check
+        }
+        
+        return true
+    }
+    
+    func kingUnderCheck(isWhite: Bool) -> Bool {
+        if isWhite {
+            return self.whiteKing!.underCheck
+        }
+        return self.blackKing!.underCheck
+    }
+    
+//    func kingUnderCheck(isWhite: Bool) -> Bool {
+//        let pieces: [Piece] = self.squares.flatMap({
+//            $0
+//            }).filter({
+//                !$0.isEmpty
+//            }).map({
+//                $0.piece!
+//            })
+//        for p in pieces {
+//            if p is King && p.isWhite == isWhite {
+//                return (p as! King).underCheck
+//            }
+//        }
+//
+//        return false
+//    }
     
 }

@@ -7,3 +7,17 @@
 //
 
 import Foundation
+
+
+class Queen: Piece {
+    
+    override init(isWhite: Bool) {
+        super.init(isWhite: isWhite)
+    }
+    
+    override func isValidMove(toCoordinates: [Int]) -> Bool {
+        return false
+    }
+    
+    
+}

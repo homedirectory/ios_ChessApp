@@ -13,6 +13,17 @@
 		E5E8A0F62578F56D00238364 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5E8A0F42578F56D00238364 /* Main.storyboard */; };
 		E5E8A0F82578F57000238364 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5E8A0F72578F57000238364 /* Assets.xcassets */; };
 		E5E8A0FB2578F57000238364 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5E8A0F92578F57000238364 /* LaunchScreen.storyboard */; };
+		E5E8A1082578F66100238364 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A1072578F66100238364 /* Board.swift */; };
+		E5E8A10E2578F7AE00238364 /* Pawn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A10D2578F7AE00238364 /* Pawn.swift */; };
+		E5E8A1102578F7B500238364 /* Rook.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A10F2578F7B500238364 /* Rook.swift */; };
+		E5E8A1122578F7BF00238364 /* Knight.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A1112578F7BF00238364 /* Knight.swift */; };
+		E5E8A1142578F7C300238364 /* Bishop.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A1132578F7C300238364 /* Bishop.swift */; };
+		E5E8A1162578F7C900238364 /* Queen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A1152578F7C900238364 /* Queen.swift */; };
+		E5E8A1182578F7CF00238364 /* King.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A1172578F7CF00238364 /* King.swift */; };
+		E5E8A11A2578F82C00238364 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A1192578F82C00238364 /* Piece.swift */; };
+		E5E8A11C25791B8600238364 /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A11B25791B8500238364 /* Square.swift */; };
+		E5E8A11F25791BCD00238364 /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A11E25791BCD00238364 /* Coordinates.swift */; };
+		E5E8A12125791F8000238364 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A12025791F8000238364 /* Game.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +35,17 @@
 		E5E8A0F72578F57000238364 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E5E8A0FA2578F57000238364 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E5E8A0FC2578F57000238364 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E5E8A1072578F66100238364 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		E5E8A10D2578F7AE00238364 /* Pawn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pawn.swift; sourceTree = "<group>"; };
+		E5E8A10F2578F7B500238364 /* Rook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rook.swift; sourceTree = "<group>"; };
+		E5E8A1112578F7BF00238364 /* Knight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Knight.swift; sourceTree = "<group>"; };
+		E5E8A1132578F7C300238364 /* Bishop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bishop.swift; sourceTree = "<group>"; };
+		E5E8A1152578F7C900238364 /* Queen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queen.swift; sourceTree = "<group>"; };
+		E5E8A1172578F7CF00238364 /* King.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = King.swift; sourceTree = "<group>"; };
+		E5E8A1192578F82C00238364 /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
+		E5E8A11B25791B8500238364 /* Square.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
+		E5E8A11E25791BCD00238364 /* Coordinates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
+		E5E8A12025791F8000238364 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +78,82 @@
 		E5E8A0ED2578F56D00238364 /* ChessApp */ = {
 			isa = PBXGroup;
 			children = (
-				E5E8A0EE2578F56D00238364 /* AppDelegate.swift */,
-				E5E8A0F02578F56D00238364 /* SceneDelegate.swift */,
-				E5E8A0F22578F56D00238364 /* ViewController.swift */,
-				E5E8A0F42578F56D00238364 /* Main.storyboard */,
+				E5E8A1062578F63E00238364 /* Delegates */,
+				E5E8A1052578F63900238364 /* Storyboards */,
+				E5E8A1042578F63600238364 /* View */,
+				E5E8A1032578F62800238364 /* Controllers */,
+				E5E8A1022578F62300238364 /* Model */,
 				E5E8A0F72578F57000238364 /* Assets.xcassets */,
-				E5E8A0F92578F57000238364 /* LaunchScreen.storyboard */,
 				E5E8A0FC2578F57000238364 /* Info.plist */,
 			);
 			path = ChessApp;
+			sourceTree = "<group>";
+		};
+		E5E8A1022578F62300238364 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E5E8A11D25791BB100238364 /* Protocols */,
+				E5E8A10C2578F7A700238364 /* Pieces */,
+				E5E8A1072578F66100238364 /* Board.swift */,
+				E5E8A11B25791B8500238364 /* Square.swift */,
+				E5E8A12025791F8000238364 /* Game.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E5E8A1032578F62800238364 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E5E8A0F22578F56D00238364 /* ViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		E5E8A1042578F63600238364 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E5E8A1052578F63900238364 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				E5E8A0F42578F56D00238364 /* Main.storyboard */,
+				E5E8A0F92578F57000238364 /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		E5E8A1062578F63E00238364 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				E5E8A0EE2578F56D00238364 /* AppDelegate.swift */,
+				E5E8A0F02578F56D00238364 /* SceneDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		E5E8A10C2578F7A700238364 /* Pieces */ = {
+			isa = PBXGroup;
+			children = (
+				E5E8A10D2578F7AE00238364 /* Pawn.swift */,
+				E5E8A10F2578F7B500238364 /* Rook.swift */,
+				E5E8A1112578F7BF00238364 /* Knight.swift */,
+				E5E8A1132578F7C300238364 /* Bishop.swift */,
+				E5E8A1152578F7C900238364 /* Queen.swift */,
+				E5E8A1172578F7CF00238364 /* King.swift */,
+				E5E8A1192578F82C00238364 /* Piece.swift */,
+			);
+			path = Pieces;
+			sourceTree = "<group>";
+		};
+		E5E8A11D25791BB100238364 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				E5E8A11E25791BCD00238364 /* Coordinates.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,8 +227,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5E8A11C25791B8600238364 /* Square.swift in Sources */,
 				E5E8A0F32578F56D00238364 /* ViewController.swift in Sources */,
+				E5E8A1102578F7B500238364 /* Rook.swift in Sources */,
+				E5E8A10E2578F7AE00238364 /* Pawn.swift in Sources */,
 				E5E8A0EF2578F56D00238364 /* AppDelegate.swift in Sources */,
+				E5E8A1122578F7BF00238364 /* Knight.swift in Sources */,
+				E5E8A1142578F7C300238364 /* Bishop.swift in Sources */,
+				E5E8A1182578F7CF00238364 /* King.swift in Sources */,
+				E5E8A1162578F7C900238364 /* Queen.swift in Sources */,
+				E5E8A12125791F8000238364 /* Game.swift in Sources */,
+				E5E8A11F25791BCD00238364 /* Coordinates.swift in Sources */,
+				E5E8A11A2578F82C00238364 /* Piece.swift in Sources */,
+				E5E8A1082578F66100238364 /* Board.swift in Sources */,
 				E5E8A0F12578F56D00238364 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

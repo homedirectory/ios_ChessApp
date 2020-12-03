@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+
+class Game {
+    
+    let board: Board
+    
+    init() {
+        self.board = Board()
+    }
+    
+}

@@ -12,7 +12,15 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        let board = Board()
+        
+        for arr in board.squares {
+            for square in arr {
+                print(square.piece)
+            }
+        }
+        
     }
 
 

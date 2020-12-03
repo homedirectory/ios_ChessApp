@@ -7,3 +7,26 @@
 //
 
 import Foundation
+
+
+public class Square: Coordinates {
+    
+    var coordinates: [Int]
+    
+    var piece: Piece? {
+        didSet {
+            piece!.coordinates = self.coordinates
+        }
+    }
+    
+    var isEmpty: Bool {
+        self.piece == nil
+    }
+    
+    init(coordinates: [Int], piece: Piece?) {
+        self.piece = piece
+        self.coordinates = coordinates
+    }
+    
+    
+}

@@ -11,6 +11,8 @@ import Foundation
 
 class King: Piece {
     
+    var underCheck: Bool = false
+    
     override init(isWhite: Bool) {
         super.init(isWhite: isWhite)
     }

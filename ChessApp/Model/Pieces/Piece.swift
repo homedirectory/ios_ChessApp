@@ -14,6 +14,11 @@ public class Piece: Coordinates {
     var name: String
     var isWhite: Bool = false
     var coordinates: [Int] = []
+    
+    var imageName: String {
+        self.name.lowercased() + "-" + (self.isWhite ? "white" : "black")
+    }
+    
     lazy var isWhiteSign: Int = {
         let sign = isWhite ? -1 : 1
         return sign

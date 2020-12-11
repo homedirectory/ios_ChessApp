@@ -28,5 +28,8 @@ public class Square: Coordinates {
         self.coordinates = coordinates
     }
     
+    func removePiece() {
+        self.piece = nil
+    }
     
 }

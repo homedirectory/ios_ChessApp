@@ -46,3 +46,19 @@ class BoardView: UIView {
     }
 
 }
+
+
+extension BoardView {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let touchPos = touch.location(in: self)
+            let row = Int(floor(touchPos.y / self.squareSide))
+            let col = Int(floor(touchPos.x / self.squareSide))
+            
+            let touchedSquareView = self.squareViews[row][col]
+            touchedSquareView.highlight()
+        }
+    }
+    
+}

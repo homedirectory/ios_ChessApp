@@ -12,10 +12,13 @@ class SquareView: UIView {
 
     private var square: Square?
     private var imageView: UIImageView?
+    private var initialBackgroundColor: UIColor?
+    private var highlighted: Bool = false
         
     func setSquare(square: Square) {
         self.square = square
-        self.backgroundColor = (square.coordinates.reduce(0, +) % 2 == 0) ? UIColor.white : UIColor.gray
+        self.initialBackgroundColor = (square.coordinates.reduce(0, +) % 2 == 0) ? UIColor.white : UIColor.gray
+        self.backgroundColor = self.initialBackgroundColor!
         
         if !self.square!.isEmpty {
             self.setImage(named: self.square!.piece!.imageName)
@@ -29,5 +32,23 @@ class SquareView: UIView {
         self.addSubview(self.imageView!)
         self.bringSubviewToFront(self.imageView!)
     }
+    
+    private func hasImage() -> Bool {
+        return self.imageView != nil
+    }
+    
+    public func highlight() {
+        if !self.hasImage() {
+            return
+        }
+        if self.highlighted {
+            self.backgroundColor = self.initialBackgroundColor!
+        }
+        else {
+            self.backgroundColor = UIColor.lightGray
+        }
+        self.highlighted = !self.highlighted
+    }
 
+    
 }

@@ -15,8 +15,11 @@ class Queen: Piece {
         super.init(isWhite: isWhite)
     }
     
-    override func isPossibleMove(toCoordinates: [Int]) -> Bool {
-        return false
+    override func getPossibleCoordinates() -> [[Int]] {
+        var coordinates: [[Int]] = []
+        coordinates.append(contentsOf: self.getCoordinatesOnDiagonals())
+        coordinates.append(contentsOf: self.getCoordinatesOnStraightLines())
+        return coordinates
     }
     
     

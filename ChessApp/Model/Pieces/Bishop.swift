@@ -14,6 +14,9 @@ class Bishop: Piece {
     override init(isWhite: Bool) {
         super.init(isWhite: isWhite)
     }
-        
+    
+    override func getPossibleCoordinates() -> [[Int]] {
+        return self.getCoordinatesOnDiagonals()
+    }
     
 }

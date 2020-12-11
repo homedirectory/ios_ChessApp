@@ -15,5 +15,7 @@ class Rook: Piece {
         super.init(isWhite: isWhite)
     }
     
-    
+    override func getPossibleCoordinates() -> [[Int]] {
+        return self.getCoordinatesOnStraightLines()
+    }
 }

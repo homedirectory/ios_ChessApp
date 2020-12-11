@@ -16,6 +16,13 @@ class King: Piece {
     override init(isWhite: Bool) {
         super.init(isWhite: isWhite)
     }
+    
+    override func getPossibleCoordinates() -> [[Int]] {
+        var coordinates: [[Int]] = []
+        coordinates.append(contentsOf: self.getCoordinatesOnDiagonals(depth: 1))
+        coordinates.append(contentsOf: self.getCoordinatesOnStraightLines(depth: 1))
+        return coordinates
+    }
         
     
 }

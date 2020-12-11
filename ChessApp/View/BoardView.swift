@@ -11,6 +11,7 @@ import UIKit
 class BoardView: UIView {
     
     private var board: Board?
+    private var squareViews: [SquareView] = []
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
@@ -28,6 +29,7 @@ class BoardView: UIView {
                 let squareView = SquareView(frame: squareRect)
                 squareView.setSquare(square: square)
                 self.addSubview(squareView)
+                self.squareViews.append(squareView)
             }
         }
         

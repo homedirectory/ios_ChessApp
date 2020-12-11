@@ -103,19 +103,19 @@ public class Board {
         
         // 3) TODO: Check if the King is under check
         if kingUnderCheck(isWhite: fromPiece.isWhite) {
-            // check if this move protects the king
+            // TODO: check if this move protects the king
         }
         
         // 4) Check the toSquare
             // contains a piece of the same color: return
             // contains a piece of different color: continue
-            // isEmpty: continue
+            // TODO: isEmpty: continue
         if !toSquare.isEmpty {
             let toPiece = toSquare.piece!
             if toPiece.equalColor(fromPiece) {
                 return false
             }
-            // TODO: Check if this move puts the King under check
+            // TODO: Check if this move puts the King of fromPiece.color under check
         }
         
         return true

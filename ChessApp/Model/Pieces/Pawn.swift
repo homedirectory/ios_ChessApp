@@ -17,28 +17,13 @@ class Pawn: Piece {
         super.init(isWhite: isWhite)
     }
     
-    override func isValidMove(toCoordinates: [Int]) -> Bool {
-        if !self.moveInBounds(toCoordinates: toCoordinates) {
-            return false
+    override func getPossibleCoordinates() -> [[Int]] {
+        var coordinates = [[self.row + 1, self.col], [self.row + 1, self.col + 1], [self.row + 1, self.col - 1]]
+        if !self.moved {
+            coordinates.append([self.row + 2, self.col])
         }
-        
-        var possiblecoordinatess = [[self.row + 1, self.col], [self.row + 1, self.col + 1], [self.row + 1, self.col - 1]]
-        
-        if !moved {
-            possiblecoordinatess.append([self.row + 2, self.col])
-        }
-        
-        if !possiblecoordinatess.contains(toCoordinates) {
-            return false
-        }
-         
-        return true
+        return coordinates
     }
-    
-//    override func moveTo(toCoordinates: [Int]) {
-//        super.moveTo(toCoordinates: toCoordinates)
-//        self.moved = true
-//    }
-    
+
     
 }

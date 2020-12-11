@@ -15,7 +15,7 @@ class Rook: Piece {
         super.init(isWhite: isWhite)
     }
     
-    override func isValidMove(toCoordinates: [Int]) -> Bool {
+    override func isPossibleMove(toCoordinates: [Int]) -> Bool {
         return false
     }
     

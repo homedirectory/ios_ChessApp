@@ -14,26 +14,36 @@ public class Piece: Coordinates {
     var name: String
     var isWhite: Bool = false
     var coordinates: [Int] = []
-    private var isWhiteSign: Int {
+    lazy var isWhiteSign: Int = {
         let sign = isWhite ? 1 : -1
         return sign
-    }
+    }()
     
     init(isWhite: Bool) {
         self.isWhite = isWhite
         self.name = NSStringFromClass(type(of: self)).components(separatedBy: ".").last!
     }
     
-//    open func moveTo(toCoordinates: [Int]) {
-//        self.coordinates = toCoordinates
-//    }
+    func getPossibleCoordinates() -> [[Int]] {
+        return [[Int]]()
+    }
+    
+    final func isPossibleMove(toCoordinates: [Int]) -> Bool {
+        // 1) check if toCoordinates fits the board size
+        if !self.moveInBounds(toCoordinates: toCoordinates) {
+            return false
+        }
+        // 2) check if toCoordinates is a possibility
+        let possibleCoordinates = self.getPossibleCoordinates()
+        if !possibleCoordinates.contains(toCoordinates) {
+            return false
+        }
+        
+        return true
+    }
     
     final func moveInBounds(toCoordinates: [Int]) -> Bool {
         return toCoordinates[0] <= Board.MAXROW && toCoordinates[1] <= Board.MAXROW
-    }
-    
-    open func isValidMove(toCoordinates: [Int]) -> Bool {
-        return false
     }
     
     final public func equalColor(_ piece: Piece) -> Bool {

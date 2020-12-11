@@ -41,6 +41,7 @@ public class Board {
         var isWhite = true
         
         var row = 1
+        // for each colour, white are first
         for _ in 1...2 {
             
             // create pawns
@@ -89,13 +90,14 @@ public class Board {
     
     func isValidMove(from fromSquare: Square, to toSquare: Square) -> Bool {
                 
+        // USELESS???
         // 1) Check if fromSquare contains a piece
         guard let fromPiece = fromSquare.piece else {
             return false
         }
         
         // 2) Check if this piece can move like that
-        if !fromPiece.isValidMove(toCoordinates: toSquare.coordinates) {
+        if !fromPiece.isPossibleMove(toCoordinates: toSquare.coordinates) {
             return false
         }
         
@@ -126,21 +128,5 @@ public class Board {
         return self.blackKing!.underCheck
     }
     
-//    func kingUnderCheck(isWhite: Bool) -> Bool {
-//        let pieces: [Piece] = self.squares.flatMap({
-//            $0
-//            }).filter({
-//                !$0.isEmpty
-//            }).map({
-//                $0.piece!
-//            })
-//        for p in pieces {
-//            if p is King && p.isWhite == isWhite {
-//                return (p as! King).underCheck
-//            }
-//        }
-//
-//        return false
-//    }
     
 }

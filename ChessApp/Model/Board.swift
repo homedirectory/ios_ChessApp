@@ -11,7 +11,7 @@ import Foundation
 
 public class Board {
     
-    static let MAXROW: Int = 7
+    public static let MAXROW: Int = 7
     
 //    var pieces: [Piece] = []
     var squares: [[Square]] = []
@@ -38,10 +38,10 @@ public class Board {
     }
     
     private func fillBoardWithPieces() {
-        var isWhite = true
+        var isWhite = false
         
         var row = 1
-        // for each colour, white are first
+        // for each colour, black are first
         for _ in 1...2 {
             
             // create pawns
@@ -51,7 +51,7 @@ public class Board {
             }
             
             //change row
-            row = isWhite ? 0 : 7
+            row = isWhite ? 7 : 0
             
             //create rooks, knights and bishops
             for j in 0...1 {
@@ -75,9 +75,9 @@ public class Board {
             }
             
             
-            //change settings for black pieces
+            //change settings for white pieces
             row = 6
-            isWhite = false
+            isWhite = true
         }
     }
     

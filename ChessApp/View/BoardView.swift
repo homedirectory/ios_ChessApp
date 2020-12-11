@@ -33,7 +33,7 @@ class BoardView: UIView {
         
     }
     
-    func setBoard(board: Board) {
+    public func setBoard(board: Board) {
         self.board = board
     }
 

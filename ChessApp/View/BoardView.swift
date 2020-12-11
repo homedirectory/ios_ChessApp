@@ -10,12 +10,25 @@ import UIKit
 
 class BoardView: UIView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
-        // Drawing code
+        super.draw(rect)
+        self.drawSquares()
     }
-    */
+    
+    func drawSquares() {
+        let squareSide = self.frame.height / 8
+        
+        for row in 0...Board.MAXROW {
+            var squareColor = (row % 2 == 0) ? UIColor.white : UIColor.gray
+            for col in 0...Board.MAXROW {
+                let squareRect = CGRect(x: squareSide * CGFloat(col), y: squareSide * CGFloat(row), width: squareSide, height: squareSide)
+                let squareRectView = UIView(frame: squareRect)
+                squareRectView.backgroundColor = squareColor
+                self.addSubview(squareRectView)
+                
+                squareColor = (squareColor == UIColor.gray) ? UIColor.white : UIColor.gray
+            }
+        }
+    }
 
 }

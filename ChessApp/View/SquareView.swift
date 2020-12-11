@@ -10,11 +10,30 @@ import UIKit
 
 class SquareView: UIView {
 
+    // MARK: - Properties
+    
     private var square: Square?
     private var imageView: UIImageView?
     private var initialBackgroundColor: UIColor?
     private var highlighted: Bool = false
-        
+    
+    // MARK: - Methods
+    
+    public func highlight() {
+        if !self.hasImage() {
+            return
+        }
+        if self.highlighted {
+            self.backgroundColor = self.initialBackgroundColor!
+        }
+        else {
+            self.backgroundColor = UIColor.lightGray
+        }
+        self.highlighted = !self.highlighted
+    }
+    
+    // MARK: - Getters and Setters
+    
     func setSquare(square: Square) {
         self.square = square
         self.initialBackgroundColor = (square.coordinates.reduce(0, +) % 2 == 0) ? UIColor.white : UIColor.gray
@@ -36,19 +55,5 @@ class SquareView: UIView {
     private func hasImage() -> Bool {
         return self.imageView != nil
     }
-    
-    public func highlight() {
-        if !self.hasImage() {
-            return
-        }
-        if self.highlighted {
-            self.backgroundColor = self.initialBackgroundColor!
-        }
-        else {
-            self.backgroundColor = UIColor.lightGray
-        }
-        self.highlighted = !self.highlighted
-    }
-
     
 }

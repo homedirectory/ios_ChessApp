@@ -15,7 +15,7 @@ public class Piece: Coordinates {
     var isWhite: Bool = false
     var coordinates: [Int] = []
     lazy var isWhiteSign: Int = {
-        let sign = isWhite ? 1 : -1
+        let sign = isWhite ? -1 : 1
         return sign
     }()
     

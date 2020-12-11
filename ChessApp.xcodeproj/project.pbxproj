@@ -10,6 +10,7 @@
 		E5D292082583B14300A6671F /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D292072583B14300A6671F /* Storyboarded.swift */; };
 		E5D2920B2583B19900A6671F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D2920A2583B19900A6671F /* Coordinator.swift */; };
 		E5D2920D2583B6A900A6671F /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D2920C2583B6A900A6671F /* BoardView.swift */; };
+		E5D2920F2583DA4800A6671F /* SquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D2920E2583DA4800A6671F /* SquareView.swift */; };
 		E5E8A0EF2578F56D00238364 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A0EE2578F56D00238364 /* AppDelegate.swift */; };
 		E5E8A0F12578F56D00238364 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A0F02578F56D00238364 /* SceneDelegate.swift */; };
 		E5E8A0F32578F56D00238364 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A0F22578F56D00238364 /* ViewController.swift */; };
@@ -33,6 +34,7 @@
 		E5D292072583B14300A6671F /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
 		E5D2920A2583B19900A6671F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		E5D2920C2583B6A900A6671F /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
+		E5D2920E2583DA4800A6671F /* SquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareView.swift; sourceTree = "<group>"; };
 		E5E8A0EB2578F56D00238364 /* ChessApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChessApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5E8A0EE2578F56D00238364 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E5E8A0F02578F56D00238364 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				E5D2920C2583B6A900A6671F /* BoardView.swift */,
+				E5D2920E2583DA4800A6671F /* SquareView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				E5E8A11F25791BCD00238364 /* Coordinates.swift in Sources */,
 				E5D2920D2583B6A900A6671F /* BoardView.swift in Sources */,
 				E5E8A11A2578F82C00238364 /* Piece.swift in Sources */,
+				E5D2920F2583DA4800A6671F /* SquareView.swift in Sources */,
 				E5E8A1082578F66100238364 /* Board.swift in Sources */,
 				E5E8A0F12578F56D00238364 /* SceneDelegate.swift in Sources */,
 			);

@@ -12,7 +12,6 @@ import UIKit
 public class Square: Coordinates {
     
     var coordinates: [Int]
-    var color: UIColor
 
     var piece: Piece? {
         didSet {
@@ -29,7 +28,6 @@ public class Square: Coordinates {
     init(coordinates: [Int], piece: Piece?) {
         self.piece = piece
         self.coordinates = coordinates
-        self.color = (self.coordinates.reduce(0, +) % 2 == 0) ? UIColor.white : UIColor.gray
     }
     
     func removePiece() {

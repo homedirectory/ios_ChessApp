@@ -8,18 +8,18 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, Storyboarded {
+    
+    weak var coordinator: Coordinator?
 
+    @IBOutlet weak var boardView: BoardView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let board = Board()
         
-//        for arr in board.squares {
-//            for square in arr {
-//                print(square.piece)
-//            }
-//        }
+        
         
     }
 

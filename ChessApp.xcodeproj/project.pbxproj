@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E5D292082583B14300A6671F /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D292072583B14300A6671F /* Storyboarded.swift */; };
+		E5D2920B2583B19900A6671F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D2920A2583B19900A6671F /* Coordinator.swift */; };
+		E5D2920D2583B6A900A6671F /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D2920C2583B6A900A6671F /* BoardView.swift */; };
 		E5E8A0EF2578F56D00238364 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A0EE2578F56D00238364 /* AppDelegate.swift */; };
 		E5E8A0F12578F56D00238364 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A0F02578F56D00238364 /* SceneDelegate.swift */; };
 		E5E8A0F32578F56D00238364 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A0F22578F56D00238364 /* ViewController.swift */; };
@@ -27,6 +30,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E5D292072583B14300A6671F /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
+		E5D2920A2583B19900A6671F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		E5D2920C2583B6A900A6671F /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
 		E5E8A0EB2578F56D00238364 /* ChessApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChessApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5E8A0EE2578F56D00238364 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E5E8A0F02578F56D00238364 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +65,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E5D292062583B13600A6671F /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				E5D292072583B14300A6671F /* Storyboarded.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		E5D292092583B19200A6671F /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				E5D2920A2583B19900A6671F /* Coordinator.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
 		E5E8A0E22578F56C00238364 = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +100,7 @@
 		E5E8A0ED2578F56D00238364 /* ChessApp */ = {
 			isa = PBXGroup;
 			children = (
+				E5D292092583B19200A6671F /* Coordinators */,
 				E5E8A1062578F63E00238364 /* Delegates */,
 				E5E8A1052578F63900238364 /* Storyboards */,
 				E5E8A1042578F63600238364 /* View */,
@@ -104,6 +127,7 @@
 		E5E8A1032578F62800238364 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E5D292062583B13600A6671F /* Protocols */,
 				E5E8A0F22578F56D00238364 /* ViewController.swift */,
 			);
 			path = Controllers;
@@ -112,6 +136,7 @@
 		E5E8A1042578F63600238364 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				E5D2920C2583B6A900A6671F /* BoardView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -227,8 +252,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5D2920B2583B19900A6671F /* Coordinator.swift in Sources */,
 				E5E8A11C25791B8600238364 /* Square.swift in Sources */,
 				E5E8A0F32578F56D00238364 /* ViewController.swift in Sources */,
+				E5D292082583B14300A6671F /* Storyboarded.swift in Sources */,
 				E5E8A1102578F7B500238364 /* Rook.swift in Sources */,
 				E5E8A10E2578F7AE00238364 /* Pawn.swift in Sources */,
 				E5E8A0EF2578F56D00238364 /* AppDelegate.swift in Sources */,
@@ -238,6 +265,7 @@
 				E5E8A1162578F7C900238364 /* Queen.swift in Sources */,
 				E5E8A12125791F8000238364 /* Game.swift in Sources */,
 				E5E8A11F25791BCD00238364 /* Coordinates.swift in Sources */,
+				E5D2920D2583B6A900A6671F /* BoardView.swift in Sources */,
 				E5E8A11A2578F82C00238364 /* Piece.swift in Sources */,
 				E5E8A1082578F66100238364 /* Board.swift in Sources */,
 				E5E8A0F12578F56D00238364 /* SceneDelegate.swift in Sources */,

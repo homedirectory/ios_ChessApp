@@ -25,9 +25,9 @@ class BoardView: UIView {
         for row in self.board!.squares {
             for square in row {
                 let squareRect = CGRect(x: squareSide * CGFloat(square.col), y: squareSide * CGFloat(square.row), width: squareSide, height: squareSide)
-                let squareRectView = UIView(frame: squareRect)
-                squareRectView.backgroundColor = square.color
-                self.addSubview(squareRectView)
+                let squareView = SquareView(frame: squareRect)
+                squareView.setSquare(square: square)
+                self.addSubview(squareView)
             }
         }
         

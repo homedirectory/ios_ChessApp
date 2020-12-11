@@ -13,7 +13,7 @@ public class Board {
     
     static let MAXROW: Int = 7
     
-    var pieces: [Piece] = []
+//    var pieces: [Piece] = []
     var squares: [[Square]] = []
     var whiteKing: King? = nil
     var blackKing: King? = nil
@@ -81,32 +81,35 @@ public class Board {
         }
     }
     
-    // MARK: - Logic
+    // MARK: - Moving Logic
     
     func movePiece(from fromSquare: Square, to toSquare: Square) {
-        
+        if fromSquare.isEmpty {
+            return
+        }
+        if self.isValidMove(from: fromSquare, to: toSquare) {
+            toSquare.removePiece()
+            toSquare.piece = fromSquare.piece
+            fromSquare.removePiece()
+        }
         
     }
     
     func isValidMove(from fromSquare: Square, to toSquare: Square) -> Bool {
                 
-        // USELESS???
-        // 1) Check if fromSquare contains a piece
-        guard let fromPiece = fromSquare.piece else {
-            return false
-        }
+        let fromPiece = fromSquare.piece!
         
-        // 2) Check if this piece can move like that
+        // 1) Check if this piece can move like that
         if !fromPiece.isPossibleMove(toCoordinates: toSquare.coordinates) {
             return false
         }
         
-        // 3) TODO: Check if the King is under check
+        // 2) TODO: Check if the King is under check
         if kingUnderCheck(isWhite: fromPiece.isWhite) {
             // TODO: check if this move protects the king
         }
         
-        // 4) Check the toSquare
+        // 3) Check the toSquare
             // contains a piece of the same color: return
             // contains a piece of different color: continue
             // TODO: isEmpty: continue

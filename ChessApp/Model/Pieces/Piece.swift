@@ -30,7 +30,7 @@ public class Piece: Coordinates {
     
     final func isPossibleMove(toCoordinates: [Int]) -> Bool {
         // 1) check if toCoordinates fits the board size
-        if !self.moveInBounds(toCoordinates: toCoordinates) {
+        if !Self.moveInBounds(toCoordinates: toCoordinates) {
             return false
         }
         // 2) check if toCoordinates is a possibility
@@ -42,12 +42,94 @@ public class Piece: Coordinates {
         return true
     }
     
-    final func moveInBounds(toCoordinates: [Int]) -> Bool {
+    static func moveInBounds(toCoordinates: [Int]) -> Bool {
         return toCoordinates[0] <= Board.MAXROW && toCoordinates[1] <= Board.MAXROW
     }
     
     final public func equalColor(_ piece: Piece) -> Bool {
         return (self.isWhite && piece.isWhite) || (!self.isWhite && !piece.isWhite)
+    }
+    
+    func getCoordinatesOnDiagonals(depth: Int = Board.MAXROW) -> [[Int]] {
+        var coordinates: [[Int]] = []
+        var diagonalUL: Bool = true
+        var diagonalUR: Bool = true
+        var diagonalLL: Bool = true
+        var diagonalLR: Bool = true
+        
+        for i in 1...depth {
+            //upper-left diagonal
+            let coordinatesUL = [self.row + i, self.col - i]
+            if diagonalUL && Self.moveInBounds(toCoordinates: coordinatesUL) {
+                coordinates.append(coordinatesUL)
+            } else {
+                diagonalUL = false
+            }
+            //upper-right diagonal
+            let coordinatesUR = [self.row + i, self.col + i]
+            if diagonalUR && Self.moveInBounds(toCoordinates: coordinatesUR) {
+                coordinates.append(coordinatesUR)
+            } else {
+                diagonalUR = false
+            }
+            //lower-left diagonal
+            let coordinatesLL = [self.row - i, self.col - i]
+            if diagonalLL && Self.moveInBounds(toCoordinates: coordinatesLL) {
+                coordinates.append(coordinatesLL)
+            } else {
+                diagonalLL = false
+            }
+            //lower-right diagonal
+            let coordinatesLR = [self.row - i, self.col + i]
+            if diagonalLR && Self.moveInBounds(toCoordinates: coordinatesLR) {
+                coordinates.append(coordinatesLR)
+            } else {
+                diagonalLR = false
+            }
+        }
+        
+        return coordinates
+    }
+    
+    func getCoordinatesOnStraightLines(depth: Int = Board.MAXROW) -> [[Int]]{
+        var coordinates: [[Int]] = []
+        var lineL: Bool = true
+        var lineR: Bool = true
+        var lineU: Bool = true
+        var lineD: Bool = true
+        
+        for i in 1...depth {
+            //left line
+            let coordinatesL = [self.row, self.col - i]
+            if lineL && Self.moveInBounds(toCoordinates: coordinatesL) {
+                coordinates.append(coordinatesL)
+            } else {
+                lineL = false
+            }
+            //right line
+            let coordinatesR = [self.row, self.col + i]
+            if lineR && Self.moveInBounds(toCoordinates: coordinatesR) {
+                coordinates.append(coordinatesR)
+            } else {
+                lineR = false
+            }
+            //upper line
+            let coordinatesU = [self.row + i, self.col]
+            if lineU && Self.moveInBounds(toCoordinates: coordinatesU) {
+                coordinates.append(coordinatesU)
+            } else {
+                lineU = false
+            }
+            //down line
+            let coordinatesD = [self.row - i, self.col]
+            if lineD && Self.moveInBounds(toCoordinates: coordinatesD) {
+                coordinates.append(coordinatesD)
+            } else {
+                lineD = false
+            }
+        }
+        
+        return coordinates
     }
     
 }

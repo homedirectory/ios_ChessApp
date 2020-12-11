@@ -12,6 +12,7 @@ class BoardView: UIView {
     
     private var board: Board?
     private var squareViews: [[SquareView]] = []
+    private var lastHighlightedSquareView: SquareView?
 
     lazy var squareSide: CGFloat = {
         return self.frame.height / 8
@@ -57,8 +58,18 @@ extension BoardView {
             let col = Int(floor(touchPos.x / self.squareSide))
             
             let touchedSquareView = self.squareViews[row][col]
-            touchedSquareView.highlight()
+            
+            // turn off the last highlighted square,
+            // but if the same square is clicked multiple times in a row - don't do anything
+            if let last = self.lastHighlightedSquareView {
+                if last != touchedSquareView {
+                    last.highlightOff()
+                }
+            }
+            
+            self.lastHighlightedSquareView = touchedSquareView.switchHighlight()
         }
+        
     }
     
 }

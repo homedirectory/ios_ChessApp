@@ -17,19 +17,28 @@ class SquareView: UIView {
     private var initialBackgroundColor: UIColor?
     private var highlighted: Bool = false
     
+    static var HIGHLIGHT_COLOR: UIColor = UIColor.lightGray
+    
     // MARK: - Methods
     
-    public func highlight() {
-        if !self.hasImage() {
-            return
+    public func switchHighlight() -> SquareView? {
+        if self.square!.isEmpty {
+            return nil
         }
         if self.highlighted {
             self.backgroundColor = self.initialBackgroundColor!
         }
         else {
-            self.backgroundColor = UIColor.lightGray
+            self.backgroundColor = SquareView.HIGHLIGHT_COLOR
         }
         self.highlighted = !self.highlighted
+
+        return self
+    }
+    
+    public func highlightOff() {
+        self.backgroundColor = self.initialBackgroundColor!
+        self.highlighted = false
     }
     
     // MARK: - Getters and Setters
@@ -50,10 +59,6 @@ class SquareView: UIView {
         self.imageView!.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: self.frame.width, height: self.frame.height)
         self.addSubview(self.imageView!)
         self.bringSubviewToFront(self.imageView!)
-    }
-    
-    private func hasImage() -> Bool {
-        return self.imageView != nil
     }
     
 }

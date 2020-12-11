@@ -52,6 +52,7 @@ public class Piece: Coordinates {
     
     func getCoordinatesOnDiagonals(depth: Int = Board.MAXROW) -> [[Int]] {
         var coordinates: [[Int]] = []
+        // 4 booleans to be able to stop checking a particular diagonal when it exceeds the board size
         var diagonalUL: Bool = true
         var diagonalUR: Bool = true
         var diagonalLL: Bool = true
@@ -93,6 +94,7 @@ public class Piece: Coordinates {
     
     func getCoordinatesOnStraightLines(depth: Int = Board.MAXROW) -> [[Int]]{
         var coordinates: [[Int]] = []
+        // 4 booleans to be able to stop checking a particular line when it exceeds the board size
         var lineL: Bool = true
         var lineR: Bool = true
         var lineU: Bool = true

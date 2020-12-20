@@ -66,6 +66,15 @@ public class SquareView: UIView {
         self.highlighted = false
     }
     
+    func update() {
+        if self.square!.isEmpty {
+            self.imageView!.image = nil
+        }
+        else {
+            self.imageView!.image = UIImage(named: self.square!.piece!.imageName)
+        }
+    }
+    
 
     
 }

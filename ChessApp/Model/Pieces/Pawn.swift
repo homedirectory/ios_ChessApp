@@ -10,9 +10,7 @@ import Foundation
 
 
 class Pawn: Piece {
-    
-    var moved: Bool = false
-    
+        
     override init(isWhite: Bool) {
         super.init(isWhite: isWhite)
     }

@@ -14,6 +14,7 @@ public class Piece {
     var name: String
     var isWhite: Bool = false
     var coordinates: Coordinates?
+    var moved: Bool = false
     
     var row: Int {
         return self.coordinates!.row

@@ -90,6 +90,7 @@ public class Board {
         if move.valid {
             let fromSquare = self.getSquare(fromCoordinates: move.from)
             let toSquare = self.getSquare(fromCoordinates: move.to)
+            fromSquare.piece!.moved = true
             toSquare.removePiece()
             toSquare.piece = fromSquare.piece
             fromSquare.removePiece()

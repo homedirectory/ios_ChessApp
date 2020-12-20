@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E58D6FC8258F966100460D21 /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58D6FC7258F966100460D21 /* Coordinates.swift */; };
+		E58D6FCA258F9EBA00460D21 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58D6FC9258F9EBA00460D21 /* Move.swift */; };
 		E5D292082583B14300A6671F /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D292072583B14300A6671F /* Storyboarded.swift */; };
 		E5D2920B2583B19900A6671F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D2920A2583B19900A6671F /* Coordinator.swift */; };
 		E5D2920D2583B6A900A6671F /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D2920C2583B6A900A6671F /* BoardView.swift */; };
@@ -26,11 +28,12 @@
 		E5E8A1182578F7CF00238364 /* King.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A1172578F7CF00238364 /* King.swift */; };
 		E5E8A11A2578F82C00238364 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A1192578F82C00238364 /* Piece.swift */; };
 		E5E8A11C25791B8600238364 /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A11B25791B8500238364 /* Square.swift */; };
-		E5E8A11F25791BCD00238364 /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A11E25791BCD00238364 /* Coordinates.swift */; };
 		E5E8A12125791F8000238364 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8A12025791F8000238364 /* Game.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E58D6FC7258F966100460D21 /* Coordinates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
+		E58D6FC9258F9EBA00460D21 /* Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 		E5D292072583B14300A6671F /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
 		E5D2920A2583B19900A6671F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		E5D2920C2583B6A900A6671F /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
@@ -52,7 +55,6 @@
 		E5E8A1172578F7CF00238364 /* King.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = King.swift; sourceTree = "<group>"; };
 		E5E8A1192578F82C00238364 /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		E5E8A11B25791B8500238364 /* Square.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
-		E5E8A11E25791BCD00238364 /* Coordinates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
 		E5E8A12025791F8000238364 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +124,8 @@
 				E5E8A1072578F66100238364 /* Board.swift */,
 				E5E8A11B25791B8500238364 /* Square.swift */,
 				E5E8A12025791F8000238364 /* Game.swift */,
+				E58D6FC7258F966100460D21 /* Coordinates.swift */,
+				E58D6FC9258F9EBA00460D21 /* Move.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -179,7 +183,6 @@
 		E5E8A11D25791BB100238364 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				E5E8A11E25791BCD00238364 /* Coordinates.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -267,10 +270,11 @@
 				E5E8A1182578F7CF00238364 /* King.swift in Sources */,
 				E5E8A1162578F7C900238364 /* Queen.swift in Sources */,
 				E5E8A12125791F8000238364 /* Game.swift in Sources */,
-				E5E8A11F25791BCD00238364 /* Coordinates.swift in Sources */,
+				E58D6FC8258F966100460D21 /* Coordinates.swift in Sources */,
 				E5D2920D2583B6A900A6671F /* BoardView.swift in Sources */,
 				E5E8A11A2578F82C00238364 /* Piece.swift in Sources */,
 				E5D2920F2583DA4800A6671F /* SquareView.swift in Sources */,
+				E58D6FCA258F9EBA00460D21 /* Move.swift in Sources */,
 				E5E8A1082578F66100238364 /* Board.swift in Sources */,
 				E5E8A0F12578F56D00238364 /* SceneDelegate.swift in Sources */,
 			);

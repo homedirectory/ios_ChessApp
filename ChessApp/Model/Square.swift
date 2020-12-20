@@ -15,8 +15,8 @@ public class Square {
 
     var piece: Piece? {
         didSet {
-            if let _ = piece {
-                piece!.coordinates = self.coordinates
+            if let piece = self.piece {
+                piece.coordinates = self.coordinates
             }
         }
     }

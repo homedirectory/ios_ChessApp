@@ -24,6 +24,22 @@ class Pawn: Piece {
         }
         return coordinates
     }
-
+    
+    func isValidMoveBySpecialRules(_ move: Move, toSquareIsEmpty: Bool) -> Bool {
+        // pawns can't move diagonally to an empty square
+        if move.isDiagonal {
+            if toSquareIsEmpty {
+                return false
+            }
+        }
+        // pawns can't eat on a straight line
+        else {
+            if !toSquareIsEmpty {
+                return false
+            }
+        }
+        
+        return true
+    }
     
 }

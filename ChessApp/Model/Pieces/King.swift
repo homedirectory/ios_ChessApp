@@ -23,6 +23,16 @@ class King: Piece {
         coordinates.append(contentsOf: self.getCoordinatesOnStraightLines(depth: 1))
         return coordinates
     }
+    
+    func getTouchingSquaresCoordinates() -> [Coordinates] {
+        let coordinates: [Coordinates] = [self.coordinates.addColumns(1), self.coordinates.addColumns(-1),
+                                          self.coordinates.addRows(1).addColumns(1), self.coordinates.addRows(1).addColumns(-1),
+                                          self.coordinates.addRows(-1).addColumns(1), self.coordinates.addRows(-1).addColumns(-1)]
+        
+        return coordinates.filter({
+            Board.inBounds(coordinates: $0)
+        })
+    }
         
     
 }

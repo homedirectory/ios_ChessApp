@@ -23,6 +23,10 @@ class BoardView: UIView {
         self.drawSquares()
     }
     
+    public func setBoard(board: Board) {
+        self.board = board
+    }
+    
     func drawSquares() {
         guard let _ = self.board else { return }
         
@@ -42,34 +46,46 @@ class BoardView: UIView {
         
     }
     
-    public func setBoard(board: Board) {
-        self.board = board
+    func update(withMove move: Move) {
+        // update fromSquareView
+        let fromSquareView = self.getSquareView(fromCoordinates: move.from)
+        fromSquareView.update()
+        fromSquareView.highlightOff()
+        // update toSquareView
+        self.getSquareView(fromCoordinates: move.to).update()
     }
-
+    
+    
 }
 
 
 extension BoardView {
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let touch = touches.first {
-            let touchPos = touch.location(in: self)
-            let row = Int(floor(touchPos.y / self.squareSide))
-            let col = Int(floor(touchPos.x / self.squareSide))
-            
-            let touchedSquareView = self.squareViews[row][col]
-            
-            // turn off the last highlighted square,
-            // but if the same square is clicked multiple times in a row - don't do anything
-            if let last = self.lastHighlightedSquareView {
-                if last != touchedSquareView {
-                    last.highlightOff()
-                }
-            }
-            
-            self.lastHighlightedSquareView = touchedSquareView.switchHighlight()
+    // Call this method when a player touches an empty square or an enemy piece
+    func turnOffLastHighlighted() {
+        if let last = self.lastHighlightedSquareView {
+            last.highlightOff()
+            self.lastHighlightedSquareView = nil
         }
+    }
+    
+    // Call this method only when a player touches on of his own pieces
+    func manageHighlighting(forCoordinates coordinates: Coordinates) {
+        // explicitly turn off the last highlighted square,
+        // but if the same square is clicked multiple times in a row - don't turn it off, but switch its state
+        let squareView = self.getSquareView(fromCoordinates: coordinates)
         
+        if let last = self.lastHighlightedSquareView {
+            if last != squareView {
+                last.highlightOff()
+            }
+        }
+        // switch highlight on the touched square and assign it to last highlighted
+        self.lastHighlightedSquareView = squareView.switchHighlight()
+    }
+    
+    private func getSquareView(fromCoordinates coordinates: Coordinates) -> SquareView {
+        return self.squareViews[coordinates.row][coordinates.col]
     }
     
 }

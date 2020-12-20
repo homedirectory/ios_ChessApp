@@ -158,5 +158,9 @@ public class Board {
         return self.blackKing!.underCheck
     }
     
+    static func moveInBounds(toCoordinates: Coordinates) -> Bool {
+        return toCoordinates.row <= Self.MAXROW && toCoordinates.col <= Self.MAXROW
+    }
+    
     
 }

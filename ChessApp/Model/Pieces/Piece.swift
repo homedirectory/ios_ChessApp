@@ -37,13 +37,17 @@ public class Piece {
         self.name = NSStringFromClass(type(of: self)).components(separatedBy: ".").last!
     }
     
+    final public func equalColor(_ piece: Piece) -> Bool {
+        return (self.isWhite && piece.isWhite) || (!self.isWhite && !piece.isWhite)
+    }
+    
     func getPossibleCoordinates() -> [Coordinates] {
         return []
     }
     
     final func isPossibleMove(toCoordinates: Coordinates) -> Bool {
         // 1) check if toCoordinates fits the board size
-        if !Self.moveInBounds(toCoordinates: toCoordinates) {
+        if !Board.moveInBounds(toCoordinates: toCoordinates) {
             return false
         }
         // 2) check if toCoordinates is a possibility
@@ -55,13 +59,10 @@ public class Piece {
         return true
     }
     
-    static func moveInBounds(toCoordinates: Coordinates) -> Bool {
-        return toCoordinates.row <= Board.MAXROW && toCoordinates.col <= Board.MAXROW
-    }
-    
-    final public func equalColor(_ piece: Piece) -> Bool {
-        return (self.isWhite && piece.isWhite) || (!self.isWhite && !piece.isWhite)
-    }
+}
+
+
+extension Piece {
     
     func getCoordinatesOnDiagonals(depth: Int = Board.MAXROW) -> [Coordinates] {
         var coordinates: [Coordinates] = []
@@ -74,28 +75,28 @@ public class Piece {
         for i in 1...depth {
             //upper-left diagonal
             let coordinatesUL = Coordinates(row: self.row + i, col: self.col - i)
-            if diagonalUL && Self.moveInBounds(toCoordinates: coordinatesUL) {
+            if diagonalUL && Board.moveInBounds(toCoordinates: coordinatesUL) {
                 coordinates.append(coordinatesUL)
             } else {
                 diagonalUL = false
             }
             //upper-right diagonal
             let coordinatesUR = Coordinates(row: self.row + i, col: self.col + i)
-            if diagonalUR && Self.moveInBounds(toCoordinates: coordinatesUR) {
+            if diagonalUR && Board.moveInBounds(toCoordinates: coordinatesUR) {
                 coordinates.append(coordinatesUR)
             } else {
                 diagonalUR = false
             }
             //lower-left diagonal
             let coordinatesLL = Coordinates(row: self.row - i, col: self.col - i)
-            if diagonalLL && Self.moveInBounds(toCoordinates: coordinatesLL) {
+            if diagonalLL && Board.moveInBounds(toCoordinates: coordinatesLL) {
                 coordinates.append(coordinatesLL)
             } else {
                 diagonalLL = false
             }
             //lower-right diagonal
             let coordinatesLR = Coordinates(row: self.row - i, col: self.col + i)
-            if diagonalLR && Self.moveInBounds(toCoordinates: coordinatesLR) {
+            if diagonalLR && Board.moveInBounds(toCoordinates: coordinatesLR) {
                 coordinates.append(coordinatesLR)
             } else {
                 diagonalLR = false
@@ -116,28 +117,28 @@ public class Piece {
         for i in 1...depth {
             //left line
             let coordinatesL = Coordinates(row: self.row, col: self.col - i)
-            if lineL && Self.moveInBounds(toCoordinates: coordinatesL) {
+            if lineL && Board.moveInBounds(toCoordinates: coordinatesL) {
                 coordinates.append(coordinatesL)
             } else {
                 lineL = false
             }
             //right line
             let coordinatesR = Coordinates(row: self.row, col: self.col + i)
-            if lineR && Self.moveInBounds(toCoordinates: coordinatesR) {
+            if lineR && Board.moveInBounds(toCoordinates: coordinatesR) {
                 coordinates.append(coordinatesR)
             } else {
                 lineR = false
             }
             //upper line
             let coordinatesU = Coordinates(row: self.row + i, col: self.col)
-            if lineU && Self.moveInBounds(toCoordinates: coordinatesU) {
+            if lineU && Board.moveInBounds(toCoordinates: coordinatesU) {
                 coordinates.append(coordinatesU)
             } else {
                 lineU = false
             }
             //down line
             let coordinatesD = Coordinates(row: self.row - i, col: self.col)
-            if lineD && Self.moveInBounds(toCoordinates: coordinatesD) {
+            if lineD && Board.moveInBounds(toCoordinates: coordinatesD) {
                 coordinates.append(coordinatesD)
             } else {
                 lineD = false

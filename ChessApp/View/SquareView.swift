@@ -12,40 +12,20 @@ class SquareView: UIView {
 
     // MARK: - Properties
     
+    static var HIGHLIGHT_SQUARE_COLOR: UIColor = UIColor.lightGray
+    static var WHITE_SQUARE_COLOR: UIColor = UIColor.white
+    static var BLACK_SQUARE_COLOR: UIColor = UIColor.gray
+    
     private var square: Square?
     private var imageView: UIImageView?
     private var initialBackgroundColor: UIColor?
     private var highlighted: Bool = false
     
-    static var HIGHLIGHT_COLOR: UIColor = UIColor.lightGray
-    
-    // MARK: - Methods
-    
-    public func switchHighlight() -> SquareView? {
-        if self.square!.isEmpty {
-            return nil
-        }
-        if self.highlighted {
-            self.backgroundColor = self.initialBackgroundColor!
-        }
-        else {
-            self.backgroundColor = SquareView.HIGHLIGHT_COLOR
-        }
-        self.highlighted = !self.highlighted
-
-        return self
-    }
-    
-    public func highlightOff() {
-        self.backgroundColor = self.initialBackgroundColor!
-        self.highlighted = false
-    }
-    
-    // MARK: - Getters and Setters
+    // MARK: - Setup
     
     func setSquare(square: Square) {
         self.square = square
-        self.initialBackgroundColor = (square.coordinates.reduce(0, +) % 2 == 0) ? UIColor.white : UIColor.gray
+        self.initialBackgroundColor = (square.coordinates.reduce(0, +) % 2 == 0) ? SquareView.WHITE_SQUARE_COLOR : SquareView.BLACK_SQUARE_COLOR
         self.backgroundColor = self.initialBackgroundColor!
         
         if !self.square!.isEmpty {
@@ -60,5 +40,29 @@ class SquareView: UIView {
         self.addSubview(self.imageView!)
         self.bringSubviewToFront(self.imageView!)
     }
+        
+    // MARK: - Methods
+    
+    public func switchHighlight() -> SquareView? {
+        if self.square!.isEmpty {
+            return nil
+        }
+        if self.highlighted {
+            self.backgroundColor = self.initialBackgroundColor!
+        }
+        else {
+            self.backgroundColor = SquareView.HIGHLIGHT_SQUARE_COLOR
+        }
+        self.highlighted = !self.highlighted
+
+        return self
+    }
+    
+    public func highlightOff() {
+        self.backgroundColor = self.initialBackgroundColor!
+        self.highlighted = false
+    }
+    
+
     
 }

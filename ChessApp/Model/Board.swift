@@ -13,7 +13,6 @@ public class Board {
     
     public static let MAXROW: Int = 7
     
-//    var pieces: [Piece] = []
     var squares: [[Square]] = []
     var whiteKing: King? = nil
     var blackKing: King? = nil
@@ -30,7 +29,7 @@ public class Board {
             var squaresRow = [Square]()
             
             for colIndex in 0...Board.MAXROW {
-                squaresRow.append(Square(coordinates: [rowIndex, colIndex], piece: nil))
+                squaresRow.append(Square(coordinates: Coordinates(row: rowIndex, col: colIndex), piece: nil))
             }
             
             self.squares.append(squaresRow)

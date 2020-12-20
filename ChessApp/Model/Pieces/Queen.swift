@@ -15,8 +15,8 @@ class Queen: Piece {
         super.init(isWhite: isWhite)
     }
     
-    override func getPossibleCoordinates() -> [[Int]] {
-        var coordinates: [[Int]] = []
+    override func getPossibleCoordinates() -> [Coordinates] {
+        var coordinates: [Coordinates] = []
         coordinates.append(contentsOf: self.getCoordinatesOnDiagonals())
         coordinates.append(contentsOf: self.getCoordinatesOnStraightLines())
         return coordinates

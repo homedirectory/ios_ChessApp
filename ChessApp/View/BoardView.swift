@@ -31,7 +31,7 @@ class BoardView: UIView {
         for row in self.board!.squares {
             var views: [SquareView] = []
             for square in row {
-                let squareRect = CGRect(x: self.squareSide * CGFloat(square.col), y: self.squareSide * CGFloat(square.row), width: self.squareSide, height: self.squareSide)
+                let squareRect = CGRect(x: self.squareSide * CGFloat(square.coordinates.col), y: self.squareSide * CGFloat(square.coordinates.row), width: self.squareSide, height: self.squareSide)
                 let squareView = SquareView(frame: squareRect)
                 squareView.setSquare(square: square)
                 self.addSubview(squareView)

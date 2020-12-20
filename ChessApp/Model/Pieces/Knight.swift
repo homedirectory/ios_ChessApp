@@ -15,9 +15,9 @@ class Knight: Piece {
         super.init(isWhite: isWhite)
     }
         
-    override func getPossibleCoordinates() -> [[Int]] {
-        return [[self.row + 2, self.col + 1], [self.row + 2, self.col - 1], [self.row + 1, self.col + 2], [self.row + 1, self.col - 2],
-                [self.row - 2, self.col + 1], [self.row - 2, self.col - 1], [self.row - 1, self.col + 2], [self.row - 1, self.col - 2]]
+    override func getPossibleCoordinates() -> [Coordinates] {
+        return [Coordinates(row: self.row + 2, col: self.col + 1), Coordinates(row: self.row + 2, col: self.col - 1), Coordinates(row: self.row + 1, col: self.col + 2), Coordinates(row: self.row + 1, col: self.col - 2),
+                Coordinates(row: self.row - 2, col: self.col + 1), Coordinates(row: self.row - 2, col: self.col - 1), Coordinates(row: self.row - 1, col: self.col + 2), Coordinates(row: self.row - 1, col: self.col - 2)]
     }
     
 }

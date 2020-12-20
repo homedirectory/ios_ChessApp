@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-public class Square: Coordinates {
+public class Square {
     
-    var coordinates: [Int]
+    var coordinates: Coordinates
 
     var piece: Piece? {
         didSet {
@@ -25,7 +25,7 @@ public class Square: Coordinates {
         self.piece == nil
     }
     
-    init(coordinates: [Int], piece: Piece?) {
+    init(coordinates: Coordinates, piece: Piece?) {
         self.piece = piece
         self.coordinates = coordinates
     }

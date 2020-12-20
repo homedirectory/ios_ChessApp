@@ -25,7 +25,7 @@ class SquareView: UIView {
     
     func setSquare(square: Square) {
         self.square = square
-        self.initialBackgroundColor = (square.coordinates.reduce(0, +) % 2 == 0) ? SquareView.WHITE_SQUARE_COLOR : SquareView.BLACK_SQUARE_COLOR
+        self.initialBackgroundColor = (square.coordinates.sum % 2 == 0) ? SquareView.WHITE_SQUARE_COLOR : SquareView.BLACK_SQUARE_COLOR
         self.backgroundColor = self.initialBackgroundColor!
         
         if !self.square!.isEmpty {

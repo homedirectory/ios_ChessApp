@@ -17,10 +17,10 @@ class Pawn: Piece {
         super.init(isWhite: isWhite)
     }
     
-    override func getPossibleCoordinates() -> [[Int]] {
-        var coordinates = [[self.row + self.isWhiteSign, self.col], [self.row + self.isWhiteSign, self.col + 1], [self.row + self.isWhiteSign, self.col - 1]]
+    override func getPossibleCoordinates() -> [Coordinates] {
+        var coordinates = [Coordinates(row: self.row + self.isWhiteSign, col :self.col), Coordinates(row: self.row + self.isWhiteSign, col: self.col + 1), Coordinates(row: self.row + self.isWhiteSign, col: self.col - 1)]
         if !self.moved {
-            coordinates.append([self.row + (2 * self.isWhiteSign), self.col])
+            coordinates.append(Coordinates(row: self.row + (2 * self.isWhiteSign), col: self.col))
         }
         return coordinates
     }

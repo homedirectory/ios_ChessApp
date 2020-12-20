@@ -9,11 +9,19 @@
 import Foundation
 
 
-public class Piece: Coordinates {
+public class Piece {
     
     var name: String
     var isWhite: Bool = false
-    var coordinates: [Int] = []
+    var coordinates: Coordinates?
+    
+    var row: Int {
+        return self.coordinates!.row
+    }
+    
+    var col: Int {
+        return self.coordinates!.col
+    }
     
     var imageName: String {
         self.name.lowercased() + "-" + (self.isWhite ? "white" : "black")
@@ -29,11 +37,11 @@ public class Piece: Coordinates {
         self.name = NSStringFromClass(type(of: self)).components(separatedBy: ".").last!
     }
     
-    func getPossibleCoordinates() -> [[Int]] {
-        return [[Int]]()
+    func getPossibleCoordinates() -> [Coordinates] {
+        return []
     }
     
-    final func isPossibleMove(toCoordinates: [Int]) -> Bool {
+    final func isPossibleMove(toCoordinates: Coordinates) -> Bool {
         // 1) check if toCoordinates fits the board size
         if !Self.moveInBounds(toCoordinates: toCoordinates) {
             return false
@@ -47,16 +55,16 @@ public class Piece: Coordinates {
         return true
     }
     
-    static func moveInBounds(toCoordinates: [Int]) -> Bool {
-        return toCoordinates[0] <= Board.MAXROW && toCoordinates[1] <= Board.MAXROW
+    static func moveInBounds(toCoordinates: Coordinates) -> Bool {
+        return toCoordinates.row <= Board.MAXROW && toCoordinates.col <= Board.MAXROW
     }
     
     final public func equalColor(_ piece: Piece) -> Bool {
         return (self.isWhite && piece.isWhite) || (!self.isWhite && !piece.isWhite)
     }
     
-    func getCoordinatesOnDiagonals(depth: Int = Board.MAXROW) -> [[Int]] {
-        var coordinates: [[Int]] = []
+    func getCoordinatesOnDiagonals(depth: Int = Board.MAXROW) -> [Coordinates] {
+        var coordinates: [Coordinates] = []
         // 4 booleans to be able to stop checking a particular diagonal when it exceeds the board size
         var diagonalUL: Bool = true
         var diagonalUR: Bool = true
@@ -65,28 +73,28 @@ public class Piece: Coordinates {
         
         for i in 1...depth {
             //upper-left diagonal
-            let coordinatesUL = [self.row + i, self.col - i]
+            let coordinatesUL = Coordinates(row: self.row + i, col: self.col - i)
             if diagonalUL && Self.moveInBounds(toCoordinates: coordinatesUL) {
                 coordinates.append(coordinatesUL)
             } else {
                 diagonalUL = false
             }
             //upper-right diagonal
-            let coordinatesUR = [self.row + i, self.col + i]
+            let coordinatesUR = Coordinates(row: self.row + i, col: self.col + i)
             if diagonalUR && Self.moveInBounds(toCoordinates: coordinatesUR) {
                 coordinates.append(coordinatesUR)
             } else {
                 diagonalUR = false
             }
             //lower-left diagonal
-            let coordinatesLL = [self.row - i, self.col - i]
+            let coordinatesLL = Coordinates(row: self.row - i, col: self.col - i)
             if diagonalLL && Self.moveInBounds(toCoordinates: coordinatesLL) {
                 coordinates.append(coordinatesLL)
             } else {
                 diagonalLL = false
             }
             //lower-right diagonal
-            let coordinatesLR = [self.row - i, self.col + i]
+            let coordinatesLR = Coordinates(row: self.row - i, col: self.col + i)
             if diagonalLR && Self.moveInBounds(toCoordinates: coordinatesLR) {
                 coordinates.append(coordinatesLR)
             } else {
@@ -97,8 +105,8 @@ public class Piece: Coordinates {
         return coordinates
     }
     
-    func getCoordinatesOnStraightLines(depth: Int = Board.MAXROW) -> [[Int]]{
-        var coordinates: [[Int]] = []
+    func getCoordinatesOnStraightLines(depth: Int = Board.MAXROW) -> [Coordinates]{
+        var coordinates: [Coordinates] = []
         // 4 booleans to be able to stop checking a particular line when it exceeds the board size
         var lineL: Bool = true
         var lineR: Bool = true
@@ -107,28 +115,28 @@ public class Piece: Coordinates {
         
         for i in 1...depth {
             //left line
-            let coordinatesL = [self.row, self.col - i]
+            let coordinatesL = Coordinates(row: self.row, col: self.col - i)
             if lineL && Self.moveInBounds(toCoordinates: coordinatesL) {
                 coordinates.append(coordinatesL)
             } else {
                 lineL = false
             }
             //right line
-            let coordinatesR = [self.row, self.col + i]
+            let coordinatesR = Coordinates(row: self.row, col: self.col + i)
             if lineR && Self.moveInBounds(toCoordinates: coordinatesR) {
                 coordinates.append(coordinatesR)
             } else {
                 lineR = false
             }
             //upper line
-            let coordinatesU = [self.row + i, self.col]
+            let coordinatesU = Coordinates(row: self.row + i, col: self.col)
             if lineU && Self.moveInBounds(toCoordinates: coordinatesU) {
                 coordinates.append(coordinatesU)
             } else {
                 lineU = false
             }
             //down line
-            let coordinatesD = [self.row - i, self.col]
+            let coordinatesD = Coordinates(row: self.row - i, col: self.col)
             if lineD && Self.moveInBounds(toCoordinates: coordinatesD) {
                 coordinates.append(coordinatesD)
             } else {

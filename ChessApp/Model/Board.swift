@@ -22,6 +22,10 @@ public class Board {
         fillBoardWithPieces()
     }
     
+    func getSquare(fromCoordinates coordinates: Coordinates) -> Square {
+        return self.squares[coordinates.row][coordinates.col]
+    }
+    
     // MARK: - Setup
     
     private func fillBoardWithEmptySquares() {
@@ -82,48 +86,72 @@ public class Board {
     
     // MARK: - Moving Logic
     
-    func movePiece(from fromSquare: Square, to toSquare: Square) {
-        if fromSquare.isEmpty {
-            return
-        }
-        if self.isValidMove(from: fromSquare, to: toSquare) {
+    func makeMove(_ move: Move) {
+        if move.valid {
+            let fromSquare = self.getSquare(fromCoordinates: move.from)
+            let toSquare = self.getSquare(fromCoordinates: move.to)
             toSquare.removePiece()
             toSquare.piece = fromSquare.piece
             fromSquare.removePiece()
         }
-        
     }
     
-    func isValidMove(from fromSquare: Square, to toSquare: Square) -> Bool {
+    func validateMove(_ move: inout Move) {
+        print("validating move from: \(move.from) to: \(move.to)")
+        
+        let fromSquare = self.getSquare(fromCoordinates: move.from)
+        let toSquare = self.getSquare(fromCoordinates: move.to)
                 
-        let fromPiece = fromSquare.piece!
+        guard let fromPiece = fromSquare.piece else { return }
         
-        // 1) Check if this piece can move like that
-        if !fromPiece.isPossibleMove(toCoordinates: toSquare.coordinates) {
-            return false
-        }
-        
-        // 2) TODO: Check if the King is under check
-        if kingUnderCheck(isWhite: fromPiece.isWhite) {
-            // TODO: check if this move protects the king
-        }
-        
-        // 3) Check the toSquare
+        // 1) Check the toSquare
             // contains a piece of the same color: return
             // contains a piece of different color: continue
-            // TODO: isEmpty: continue
         if !toSquare.isEmpty {
-            let toPiece = toSquare.piece!
-            if toPiece.equalColor(fromPiece) {
-                return false
+            if toSquare.piece!.equalColor(fromPiece) {
+                move.setInvalid(reason: .toOwnPiece)
+                return
             }
             // TODO: Check if this move puts the King of fromPiece.color under check
         }
         
-        return true
+        // 2) Check if this piece can move like that
+        if !fromPiece.isPossibleMove(toCoordinates: toSquare.coordinates) {
+            move.setInvalid(reason: .impossibleMove)
+            return
+        }
+        
+        // 3) Validation by special rules if any exist (example: Pawn can eat on a diagonal line)
+        if !(fromPiece as! Pawn).isValidMoveBySpecialRules(move, toSquareIsEmpty: self.getSquare(fromCoordinates: move.to).isEmpty) {
+            move.setInvalid(reason: .impossibleMove)
+            return
+        }
+        
+        // 4) Check if by making this move, a piece passes through other pieces illegally
+        if !(fromPiece is Knight) {
+            // if this move is in a straight line (Rook, Queen, King and Pawn)
+            print("move line")
+            move.line.forEach({ print([$0.row, $0.col]) })
+            for coord in move.line {
+                if !self.getSquare(fromCoordinates: coord).isEmpty {
+                    move.setInvalid(reason: .impossibleMove)
+                    return
+                }
+                
+            }
+        }
+        
+        // 4) TODO: Check if the King is under check
+        if isKingUnderCheck(isWhite: fromPiece.isWhite) {
+            // TODO: check if this move protects the king
+        }
+        
+        move.valid = true
+        
     }
     
-    func kingUnderCheck(isWhite: Bool) -> Bool {
+    
+    func isKingUnderCheck(isWhite: Bool) -> Bool {
         if isWhite {
             return self.whiteKing!.underCheck
         }

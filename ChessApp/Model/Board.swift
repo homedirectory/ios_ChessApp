@@ -122,10 +122,13 @@ public class Board {
         }
         
         // 3) Validation by special rules if any exist (example: Pawn can eat on a diagonal line)
-        if !(fromPiece as! Pawn).isValidMoveBySpecialRules(move, toSquareIsEmpty: self.getSquare(fromCoordinates: move.to).isEmpty) {
-            move.setInvalid(reason: .impossibleMove)
-            return
+        if fromPiece is Pawn {
+            if !(fromPiece as! Pawn).isValidMoveBySpecialRules(move, toSquareIsEmpty: self.getSquare(fromCoordinates: move.to).isEmpty) {
+                move.setInvalid(reason: .impossibleMove)
+                return
+            }
         }
+        
         
         // 4) Check if by making this move, a piece passes through other pieces illegally
         if !(fromPiece is Knight) {

@@ -28,17 +28,20 @@ class SquareView: UIView {
         self.initialBackgroundColor = (square.coordinates.sum % 2 == 0) ? SquareView.WHITE_SQUARE_COLOR : SquareView.BLACK_SQUARE_COLOR
         self.backgroundColor = self.initialBackgroundColor!
         
+        self.imageView = UIImageView()
+        self.addSubview(self.imageView!)
+        self.bringSubviewToFront(self.imageView!)
+        self.imageView!.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: self.frame.width, height: self.frame.height)
+        
         if !self.square!.isEmpty {
             self.setImage(named: self.square!.piece!.imageName)
         }
     }
     
     private func setImage(named imageName: String) {
-        let image = UIImage(named: imageName)
-        self.imageView = UIImageView(image: image!)
-        self.imageView!.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: self.frame.width, height: self.frame.height)
-        self.addSubview(self.imageView!)
-        self.bringSubviewToFront(self.imageView!)
+//        let image = UIImage(named: imageName)
+//        self.imageView = UIImageView(image: image!)
+        self.imageView!.image = UIImage(named: imageName)
     }
         
     // MARK: - Methods

@@ -12,9 +12,9 @@ class SquareView: UIView {
 
     // MARK: - Properties
     
-    static var HIGHLIGHT_SQUARE_COLOR: UIColor = UIColor.lightGray
-    static var WHITE_SQUARE_COLOR: UIColor = UIColor.white
-    static var BLACK_SQUARE_COLOR: UIColor = UIColor.gray
+    static let HIGHLIGHT_SQUARE_COLOR: UIColor = UIColor.lightGray
+    static let WHITE_SQUARE_COLOR: UIColor = UIColor.white
+    static let BLACK_SQUARE_COLOR: UIColor = UIColor.gray
     
     private var square: Square?
     private var imageView: UIImageView?

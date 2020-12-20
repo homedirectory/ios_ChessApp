@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SquareView: UIView {
+public class SquareView: UIView {
 
     // MARK: - Properties
     
@@ -16,7 +16,7 @@ class SquareView: UIView {
     static let WHITE_SQUARE_COLOR: UIColor = UIColor.white
     static let BLACK_SQUARE_COLOR: UIColor = UIColor.gray
     
-    private var square: Square?
+    public var square: Square?
     private var imageView: UIImageView?
     private var initialBackgroundColor: UIColor?
     private var highlighted: Bool = false
@@ -46,7 +46,7 @@ class SquareView: UIView {
         
     // MARK: - Methods
     
-    public func switchHighlight() -> SquareView? {
+    func switchHighlight() -> SquareView? {
         if self.square!.isEmpty {
             return nil
         }
@@ -61,7 +61,7 @@ class SquareView: UIView {
         return self
     }
     
-    public func highlightOff() {
+    func highlightOff() {
         self.backgroundColor = self.initialBackgroundColor!
         self.highlighted = false
     }

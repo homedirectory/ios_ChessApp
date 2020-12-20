@@ -13,15 +13,15 @@ public class Piece {
     
     var name: String
     var isWhite: Bool = false
-    var coordinates: Coordinates?
+    var coordinates: Coordinates = Coordinates(row: 100, col: 100)
     var moved: Bool = false
     
     var row: Int {
-        return self.coordinates!.row
+        return self.coordinates.row
     }
     
     var col: Int {
-        return self.coordinates!.col
+        return self.coordinates.col
     }
     
     var imageName: String {
@@ -48,7 +48,7 @@ public class Piece {
     
     final func isPossibleMove(toCoordinates: Coordinates) -> Bool {
         // 1) check if toCoordinates fits the board size
-        if !Board.moveInBounds(toCoordinates: toCoordinates) {
+        if !Board.inBounds(coordinates: toCoordinates) {
             return false
         }
         // 2) check if toCoordinates is a possibility
@@ -75,29 +75,29 @@ extension Piece {
         
         for i in 1...depth {
             //upper-left diagonal
-            let coordinatesUL = Coordinates(row: self.row + i, col: self.col - i)
-            if diagonalUL && Board.moveInBounds(toCoordinates: coordinatesUL) {
+            let coordinatesUL = self.coordinates.addRows(i).addColumns(-i)
+            if diagonalUL && Board.inBounds(coordinates: coordinatesUL) {
                 coordinates.append(coordinatesUL)
             } else {
                 diagonalUL = false
             }
             //upper-right diagonal
-            let coordinatesUR = Coordinates(row: self.row + i, col: self.col + i)
-            if diagonalUR && Board.moveInBounds(toCoordinates: coordinatesUR) {
+            let coordinatesUR = self.coordinates.addRows(i).addColumns(i)
+            if diagonalUR && Board.inBounds(coordinates: coordinatesUR) {
                 coordinates.append(coordinatesUR)
             } else {
                 diagonalUR = false
             }
             //lower-left diagonal
-            let coordinatesLL = Coordinates(row: self.row - i, col: self.col - i)
-            if diagonalLL && Board.moveInBounds(toCoordinates: coordinatesLL) {
+            let coordinatesLL = self.coordinates.addRows(-i).addColumns(-i)
+            if diagonalLL && Board.inBounds(coordinates: coordinatesLL) {
                 coordinates.append(coordinatesLL)
             } else {
                 diagonalLL = false
             }
             //lower-right diagonal
-            let coordinatesLR = Coordinates(row: self.row - i, col: self.col + i)
-            if diagonalLR && Board.moveInBounds(toCoordinates: coordinatesLR) {
+            let coordinatesLR = self.coordinates.addRows(-i).addColumns(i)
+            if diagonalLR && Board.inBounds(coordinates: coordinatesLR) {
                 coordinates.append(coordinatesLR)
             } else {
                 diagonalLR = false
@@ -117,29 +117,29 @@ extension Piece {
         
         for i in 1...depth {
             //left line
-            let coordinatesL = Coordinates(row: self.row, col: self.col - i)
-            if lineL && Board.moveInBounds(toCoordinates: coordinatesL) {
+            let coordinatesL = self.coordinates.addColumns(-i)
+            if lineL && Board.inBounds(coordinates: coordinatesL) {
                 coordinates.append(coordinatesL)
             } else {
                 lineL = false
             }
             //right line
-            let coordinatesR = Coordinates(row: self.row, col: self.col + i)
-            if lineR && Board.moveInBounds(toCoordinates: coordinatesR) {
+            let coordinatesR = self.coordinates.addColumns(i)
+            if lineR && Board.inBounds(coordinates: coordinatesR) {
                 coordinates.append(coordinatesR)
             } else {
                 lineR = false
             }
             //upper line
-            let coordinatesU = Coordinates(row: self.row + i, col: self.col)
-            if lineU && Board.moveInBounds(toCoordinates: coordinatesU) {
+            let coordinatesU = self.coordinates.addRows(i)
+            if lineU && Board.inBounds(coordinates: coordinatesU) {
                 coordinates.append(coordinatesU)
             } else {
                 lineU = false
             }
             //down line
-            let coordinatesD = Coordinates(row: self.row - i, col: self.col)
-            if lineD && Board.moveInBounds(toCoordinates: coordinatesD) {
+            let coordinatesD = self.coordinates.addRows(-i)
+            if lineD && Board.inBounds(coordinates: coordinatesD) {
                 coordinates.append(coordinatesD)
             } else {
                 lineD = false

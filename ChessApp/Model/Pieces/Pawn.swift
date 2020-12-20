@@ -16,9 +16,9 @@ class Pawn: Piece {
     }
     
     override func getPossibleCoordinates() -> [Coordinates] {
-        var coordinates = [Coordinates(row: self.row + self.isWhiteSign, col :self.col), Coordinates(row: self.row + self.isWhiteSign, col: self.col + 1), Coordinates(row: self.row + self.isWhiteSign, col: self.col - 1)]
+        var coordinates = [self.coordinates.addRows(self.isWhiteSign), self.coordinates.addRows(self.isWhiteSign).addColumns(1), self.coordinates.addRows(self.isWhiteSign).addColumns(-1)]
         if !self.moved {
-            coordinates.append(Coordinates(row: self.row + (2 * self.isWhiteSign), col: self.col))
+            coordinates.append(self.coordinates.addRows(2 * self.isWhiteSign))
         }
         return coordinates
     }

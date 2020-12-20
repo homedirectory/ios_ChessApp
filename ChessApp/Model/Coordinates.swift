@@ -18,6 +18,14 @@ struct Coordinates {
         return self.row + self.col
     }
     
+    func addRows(_ number: Int) -> Coordinates {
+        return Coordinates(row: self.row + number, col: self.col)
+    }
+    
+    func addColumns(_ number: Int) -> Coordinates {
+        return Coordinates(row: self.row, col: self.col + number)
+    }
+    
 }
 
 

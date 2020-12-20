@@ -154,6 +154,14 @@ public class Board {
         
     }
     
+    func updateKingUnderCheck(isWhite: Bool) {
+        let king = isWhite ? self.whiteKing! : self.blackKing!
+        
+        
+        
+         
+    }
+    
     
     func isKingUnderCheck(isWhite: Bool) -> Bool {
         if isWhite {
@@ -162,8 +170,8 @@ public class Board {
         return self.blackKing!.underCheck
     }
     
-    static func moveInBounds(toCoordinates: Coordinates) -> Bool {
-        return toCoordinates.row <= Self.MAXROW && toCoordinates.col <= Self.MAXROW
+    static func inBounds(coordinates: Coordinates) -> Bool {
+        return coordinates.row <= Self.MAXROW && coordinates.col <= Self.MAXROW
     }
     
     

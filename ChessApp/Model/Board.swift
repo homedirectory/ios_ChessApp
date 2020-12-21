@@ -14,17 +14,11 @@ public class Board {
     public static let MAXROW: Int = 7
     
     var squares: [[Square]] = []
-    var checkMate: Bool = false
     var whiteKing: King? = nil
     var blackKing: King? = nil
     
-//    var whiteKing: King {
-//        return self.whitePieces.filter({ $0 is King }).first! as! King
-//    }
-//
-//    var blackKing: King {
-//        return self.blackPieces.filter({ $0 is King }).first! as! King
-//    }
+    var checkMate: Bool = false
+    var staleMate: Bool = false
     
     lazy var whitePieces : [Piece] = {
         return self.squares.flatMap({ $0 }).filter({ !$0.isEmpty && $0.piece!.isWhite }).map({ $0.piece! })
@@ -142,9 +136,20 @@ public class Board {
         // check all pieces with potentialCheck == true if they are actually checking the King
         self.updateActualCheck()
         
-        if callIsCheckMate && self.isKingUnderCheck(isWhite: !toSquare.piece!.isWhite) {
-            self.checkMate = self.isCheckMate(isWhite: !toSquare.piece!.isWhite)
+        if callIsCheckMate {
+            let value = self.noPossibleMoves(isWhite: !toSquare.piece!.isWhite)
+            
+            if self.isKingUnderCheck(isWhite: !toSquare.piece!.isWhite) {
+                self.checkMate = value
+            }
+            else {
+                self.staleMate = value
+            }
         }
+        
+//        if callIsCheckMate && self.isKingUnderCheck(isWhite: !toSquare.piece!.isWhite) {
+//            self.checkMate = self.isCheckMate(isWhite: !toSquare.piece!.isWhite)
+//        }
         
         print("move was made, white king under check: \(self.whiteKing!.underCheck), black king under check: \(self.blackKing!.underCheck)")
     }
@@ -293,19 +298,6 @@ public class Board {
         let newKingPos = move.from.addColumns(2 * kingColDiffSign)
         let newRookPos = newKingPos.addColumns(-1 * kingColDiffSign)
         
-//        var king: King? = nil
-//        var rook: Rook? = nil
-//
-//        if isReverse {
-//            king = self.getSquare(fromCoordinates: newKingPos).piece! as? King
-//            rook = self.getSquare(fromCoordinates: newRookPos).piece! as? Rook
-//
-//            self.getSquare(fromCoordinates: newKingPos).removePiece()
-//            self.getSquare(fromCoordinates: newRookPos).removePiece()
-//
-//            self.getSquare(fromCoordinates: move.from).piece = king
-//            self.getSquare(fromCoordinates: move.to).piece = rook
-//        }
         let kingSquare = self.getSquare(fromCoordinates: move.from)
         let rookSquare = self.getSquare(fromCoordinates: move.to)
         
@@ -361,7 +353,7 @@ public class Board {
     }
     
     // only call this method when you know that king is under check
-    func isCheckMate(isWhite: Bool) -> Bool {
+    func noPossibleMoves(isWhite: Bool) -> Bool {
         print("isCheckMate?")
         let pieces = isWhite ? self.aliveWhitePieces : self.aliveBlackPieces
         
@@ -378,7 +370,7 @@ public class Board {
                 }
             }
         }
-        self.checkMate = true
+        
         return true
     }
     
@@ -411,14 +403,6 @@ extension Board {
             }
             board.squares.append(rowCopy)
         }
-        
-//        if let whiteKing = self.whiteKing {
-//            board.whiteKing = whiteKing.makeCopy()
-//        }
-//
-//        if let blackKing = self.blackKing {
-//            board.blackKing = blackKing.makeCopy()
-//        }
         
         board.checkMate = self.checkMate
         

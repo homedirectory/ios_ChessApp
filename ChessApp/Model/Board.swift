@@ -287,67 +287,66 @@ public class Board {
         return false
     }
     
-    func castle(_ move: Move, isReverse: Bool = false) {
+    func castle(_ move: Move) {
         let kingColDiffSign = (move.to.col - move.from.col) > 0 ? 1 : -1
         
         let newKingPos = move.from.addColumns(2 * kingColDiffSign)
         let newRookPos = newKingPos.addColumns(-1 * kingColDiffSign)
         
-        var king: King? = nil
-        var rook: Rook? = nil
-                
-        if isReverse {
-            king = self.getSquare(fromCoordinates: newKingPos).piece! as? King
-            rook = self.getSquare(fromCoordinates: newRookPos).piece! as? Rook
-            
-            self.getSquare(fromCoordinates: newKingPos).removePiece()
-            self.getSquare(fromCoordinates: newRookPos).removePiece()
-            
-            self.getSquare(fromCoordinates: move.from).piece = king
-            self.getSquare(fromCoordinates: move.to).piece = rook
-        }
-        else {
-            let kingSquare = self.getSquare(fromCoordinates: move.from)
-            let rookSquare = self.getSquare(fromCoordinates: move.to)
-            
-            king = kingSquare.piece! as? King
-            rook = rookSquare.piece! as? Rook
-            
-            self.getSquare(fromCoordinates: newKingPos).piece = king
-            self.getSquare(fromCoordinates: newRookPos).piece = rook
-            
-            kingSquare.removePiece()
-            rookSquare.removePiece()
-        }
+//        var king: King? = nil
+//        var rook: Rook? = nil
+//
+//        if isReverse {
+//            king = self.getSquare(fromCoordinates: newKingPos).piece! as? King
+//            rook = self.getSquare(fromCoordinates: newRookPos).piece! as? Rook
+//
+//            self.getSquare(fromCoordinates: newKingPos).removePiece()
+//            self.getSquare(fromCoordinates: newRookPos).removePiece()
+//
+//            self.getSquare(fromCoordinates: move.from).piece = king
+//            self.getSquare(fromCoordinates: move.to).piece = rook
+//        }
+        let kingSquare = self.getSquare(fromCoordinates: move.from)
+        let rookSquare = self.getSquare(fromCoordinates: move.to)
+        
+        let king = kingSquare.piece! as! King
+        let rook = rookSquare.piece! as! Rook
+        
+        self.getSquare(fromCoordinates: newKingPos).piece = king
+        self.getSquare(fromCoordinates: newRookPos).piece = rook
+        
+        kingSquare.removePiece()
+        rookSquare.removePiece()
         
         // update potentialCheck for a moving piece
-        self.updatePotentialCheck(forPiece: rook!)
+        self.updatePotentialCheck(forPiece: rook)
                 
         // when king moved (castling means king always moves) - update potentialCheck for all pieces
         self.updatePotentialCheck()
         // check all pieces with potentialCheck == true if they are actually checking the enemy King
         self.updateActualCheck()
         
-        if !isReverse {
-            print("move was made, white king under check: \(self.whiteKing!.underCheck), black king under check: \(self.blackKing!.underCheck)")
-        }
-        
     }
     
     func validateCastling(_ move: inout Move) {
-        let king = self.getSquare(fromCoordinates: move.from).piece as! King
+        let boardCopy = self.makeCopy()
+        let king = boardCopy.getSquare(fromCoordinates: move.from).piece as! King
         
-        self.castle(move)
+        // can't castle if king is under check
+        if king.underCheck {
+            move.setInvalid(reason: .ownKingUnderCheck)
+            return
+        }
+        
+        boardCopy.castle(move)
         print("made a move to test if king is under check")
         if king.underCheck {
-            print("after this move king is under check, invalid move, reversing")
+            print("after castling king is under check, invalid move")
             move.setInvalid(reason: .ownKingUnderCheck)
-            self.castle(move, isReverse: true)
             return
         }
         else {
-            print("after this move king is not under check, reversing")
-            self.castle(move, isReverse: true)
+            print("after castling king is not under check")
         }
         
         move.valid = true

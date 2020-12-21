@@ -34,4 +34,27 @@ public class Square {
         self.piece = nil
     }
     
+    func killPiece() {
+        if let piece = self.piece {
+            piece.dead = true
+        }
+    }
+    
+}
+
+
+extension Square {
+    
+    func makeCopy() -> Square {
+        var pieceCopy: Piece? = nil
+        
+        if let piece = self.piece {
+            pieceCopy = piece.makeCopy()
+        }
+        
+        let square = Square(coordinates: self.coordinates, piece: pieceCopy)
+        
+        return square
+    }
+    
 }

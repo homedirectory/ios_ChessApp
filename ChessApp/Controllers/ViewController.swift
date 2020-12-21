@@ -54,6 +54,7 @@ extension ViewController {
         // if a piece was selected on a previous touch
         if let coordinates = self.selectedSquareCoordinates {
             
+            // if a piece was selected twice in a row
             if coordinates == touchedSquareCoordinates {
                 self.boardView.manageHighlighting(forCoordinates: coordinates)
                 self.selectedSquareCoordinates = nil
@@ -71,14 +72,30 @@ extension ViewController {
                 board.makeMove(move)
                 // UI: update boardView
                 boardView.update(withMove: move)
+                if board.isKingUnderCheck(isWhite: true) {
+                    
+                }
                 // after a move was made there is no selected square
                 self.selectedSquareCoordinates = nil
                 
                 if board.checkMate {
+                    self.messageLabel.text = "Checkmate"
                     self.messageLabel.isHidden = false
                     self.gameEnded = true
                     return
                 }
+                else if board.staleMate {
+                    self.messageLabel.text = "Stalemate"
+                    self.messageLabel.isHidden = false
+                    self.gameEnded = true
+                    return
+                }
+                
+                let whiteKingUnderCheck = board.isKingUnderCheck(isWhite: true)
+                self.boardView.highlightCheck(kingCoordinates: board.whiteKing!.coordinates, turnOn: whiteKingUnderCheck, isWhite: true)
+                
+                let blackKingUnderCheck = board.isKingUnderCheck(isWhite: false)
+                self.boardView.highlightCheck(kingCoordinates: board.blackKing!.coordinates, turnOn: blackKingUnderCheck, isWhite: false)
             }
             
             // if move is not valid

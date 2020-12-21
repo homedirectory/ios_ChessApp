@@ -28,6 +28,10 @@ struct Move {
         
         let rowDiff = from.row - to.row
         let colDiff = from.col - to.col
+        
+        if abs(rowDiff) < 2 && abs(colDiff) < 2 {
+            return []
+        }
                 
         var rowRange = rowDiff == 0 ? Array(repeating: from.row, count: abs(colDiff)) : Array([from.row, to.row].min()!..<[from.row, to.row].max()!)
         rowRange.removeFirst()
@@ -68,6 +72,7 @@ extension Move {
         case impossibleMove
         case toOwnPiece
         case ownKingUnderCheck
+        case outOfBounds
     }
     
 }

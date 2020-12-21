@@ -30,7 +30,7 @@ public class SquareView: UIView {
         
         self.imageView = UIImageView()
         self.addSubview(self.imageView!)
-        self.bringSubviewToFront(self.imageView!)
+//        self.bringSubviewToFront(self.imageView!)
         self.imageView!.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: self.frame.width, height: self.frame.height)
         
         if !self.square!.isEmpty {
@@ -38,7 +38,7 @@ public class SquareView: UIView {
         }
     }
     
-    private func setImage(named imageName: String) {
+    func setImage(named imageName: String) {
 //        let image = UIImage(named: imageName)
 //        self.imageView = UIImageView(image: image!)
         self.imageView!.image = UIImage(named: imageName)

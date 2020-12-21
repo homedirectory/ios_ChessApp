@@ -71,6 +71,17 @@ class BoardView: UIView {
 
 extension BoardView {
     
+    func highlightCheck(kingCoordinates: Coordinates, turnOn: Bool, isWhite: Bool) {
+        if isWhite {
+            let imageName = turnOn ? "king-white-check" : "king-white"
+            self.getSquareView(fromCoordinates: kingCoordinates).setImage(named: imageName)
+        }
+        else {
+            let imageName = turnOn ? "king-black-check" : "king-black"
+            self.getSquareView(fromCoordinates: kingCoordinates).setImage(named: imageName)
+        }
+    }
+    
     // Call this method when a player touches an empty square or an enemy piece
     func turnOffLastHighlighted() {
         if let last = self.lastHighlightedSquareView {

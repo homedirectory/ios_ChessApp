@@ -14,20 +14,35 @@ public class Board {
     public static let MAXROW: Int = 7
     
     var squares: [[Square]] = []
+    var checkMate: Bool = false
     var whiteKing: King? = nil
     var blackKing: King? = nil
     
-    var whitePieces : [Piece] {
+//    var whiteKing: King {
+//        return self.whitePieces.filter({ $0 is King }).first! as! King
+//    }
+//
+//    var blackKing: King {
+//        return self.blackPieces.filter({ $0 is King }).first! as! King
+//    }
+    
+    lazy var whitePieces : [Piece] = {
         return self.squares.flatMap({ $0 }).filter({ !$0.isEmpty && $0.piece!.isWhite }).map({ $0.piece! })
+    }()
+    
+    lazy var blackPieces : [Piece] = {
+        return self.squares.flatMap({ $0 }).filter({ !$0.isEmpty && !$0.piece!.isWhite }).map({ $0.piece! })
+    }()
+    
+    var aliveWhitePieces: [Piece] {
+        return self.whitePieces.filter({ !$0.dead })
     }
     
-    var blackPieces : [Piece] {
-        return self.squares.flatMap({ $0 }).filter({ !$0.isEmpty && !$0.piece!.isWhite }).map({ $0.piece! })
+    var aliveBlackPieces: [Piece] {
+        return self.blackPieces.filter({ !$0.dead })
     }
     
     init() {
-        fillBoardWithEmptySquares()
-        fillBoardWithPieces()
     }
     
     func getSquare(fromCoordinates coordinates: Coordinates) -> Square {
@@ -35,6 +50,11 @@ public class Board {
     }
     
     // MARK: - Setup
+    
+    func generate() {
+        self.fillBoardWithEmptySquares()
+        self.fillBoardWithPieces()
+    }
     
     private func fillBoardWithEmptySquares() {
         for rowIndex in 0...Board.MAXROW {
@@ -79,10 +99,10 @@ public class Board {
             
             if isWhite {
                 self.whiteKing = King(isWhite: isWhite)
-                self.squares[row][4].piece = self.whiteKing
+                self.squares[row][4].piece = self.whiteKing!
             } else {
                 self.blackKing = King(isWhite: isWhite)
-                self.squares[row][4].piece = self.blackKing
+                self.squares[row][4].piece = self.blackKing!
             }
             
             
@@ -94,27 +114,24 @@ public class Board {
     
     // MARK: - Moving Logic
     
-    func makeMove(_ move: Move, isReverse: Bool = false) {
-        if isReverse {
-            print("making a reverse move")
-        }
-        var moveToMake = move
-        if isReverse {
-            moveToMake = move.reverse()
-        }
-        
-        if !isReverse && self.isCastling(move) {
+    func makeMove(_ move: Move, callIsCheckMate: Bool = true) {
+                
+        if self.isCastling(move) {
             self.castle(move)
             return
         }
         
         // update from square and to square
-        let fromSquare = self.getSquare(fromCoordinates: moveToMake.from)
-        let toSquare = self.getSquare(fromCoordinates: moveToMake.to)
+        let fromSquare = self.getSquare(fromCoordinates: move.from)
+        let toSquare = self.getSquare(fromCoordinates: move.to)
+        
+        toSquare.killPiece()
         toSquare.removePiece()
         toSquare.piece = fromSquare.piece
         fromSquare.removePiece()
-        toSquare.piece!.moved = !isReverse
+        
+        toSquare.piece!.moved = true
+        
         // update potentialCheck for a moving piece
         self.updatePotentialCheck(forPiece: toSquare.piece!)
                 
@@ -122,16 +139,23 @@ public class Board {
         if toSquare.piece! is King {
             self.updatePotentialCheck()
         }
-        // check all pieces with potentialCheck == true if they are actually checking the enemy King
+        // check all pieces with potentialCheck == true if they are actually checking the King
         self.updateActualCheck()
         
-        if !isReverse {
-            print("move was made, white king under check: \(self.whiteKing!.underCheck), black king under check: \(self.blackKing!.underCheck)")
+        if callIsCheckMate && self.isKingUnderCheck(isWhite: !toSquare.piece!.isWhite) {
+            self.checkMate = self.isCheckMate(isWhite: !toSquare.piece!.isWhite)
         }
+        
+        print("move was made, white king under check: \(self.whiteKing!.underCheck), black king under check: \(self.blackKing!.underCheck)")
     }
     
-    func validateMove(_ move: inout Move) {
+    func validateMove(_ move: inout Move, callIsCheckMate: Bool = true) {
         print("--------- validating move from: \(move.from) to: \(move.to)")
+        
+        if !Self.inBounds(coordinates: move.from) || !Self.inBounds(coordinates: move.to) {
+            move.setInvalid(reason: .outOfBounds)
+            return
+        }
         
         let fromSquare = self.getSquare(fromCoordinates: move.from)
         let toSquare = self.getSquare(fromCoordinates: move.to)
@@ -141,12 +165,12 @@ public class Board {
             return
         }
         
-        print("moving piece: \(fromPiece.name)")
+        print("moving piece: \(fromPiece.toString())")
         
         // 1) Check the toSquare
             // contains a piece of the same color: move invalid and return
-            // TODO: Castling
         if !toSquare.isEmpty {
+            print("to square is not empty -> \(toSquare.piece!.toString())")
             if toSquare.piece!.equalColor(fromPiece) {
                 print("castling: ", self.isCastling(move))
                 if !self.isCastling(move) {
@@ -168,12 +192,11 @@ public class Board {
         
         // 3) Validation by special rules if any exist (example: Pawn can eat on a diagonal line)
         if fromPiece is Pawn {
-            if !(fromPiece as! Pawn).isValidMoveBySpecialRules(move, toSquareIsEmpty: self.getSquare(fromCoordinates: move.to).isEmpty) {
+            if !(fromPiece as! Pawn).isValidMoveBySpecialRules(move, toSquareIsEnemy: toSquare.isEmpty ? false : !fromPiece.equalColor(toSquare.piece!)) {
                 move.setInvalid(reason: .impossibleMove)
                 return
             }
         }
-        
         
         // 4) Check if by making this move, a piece passes through other pieces illegally
         if !(fromPiece is Knight) {
@@ -184,17 +207,17 @@ public class Board {
         }
         
         // Check if after making this move the king is under check
-        self.makeMove(move)
-        print("made a move to test if king is under check")
-        if isKingUnderCheck(isWhite: fromPiece.isWhite) {
-            print("after this move king is under check, invalid move, reversing")
+        let boardCopy = self.makeCopy()
+        boardCopy.makeMove(move, callIsCheckMate: false)
+        print("Board Copy making move: \(move)")
+        print("BOARD COPY WHITE KING COORDINATES: ", boardCopy.whiteKing!.coordinates)
+        
+        print("board copy king under check: ", boardCopy.isKingUnderCheck(isWhite: fromPiece.isWhite))
+        
+        if boardCopy.isKingUnderCheck(isWhite: fromPiece.isWhite) {
+            print("after this move king is under check, invalid move")
             move.setInvalid(reason: .ownKingUnderCheck)
-            self.makeMove(move, isReverse: true)
             return
-        }
-        else {
-            print("after this move king is not under check, reversing")
-            self.makeMove(move, isReverse: true)
         }
         
         move.valid = true
@@ -211,9 +234,9 @@ public class Board {
     }
     
     func updatePotentialCheck(forPiece piece: Piece) {
-        let enemyKing = piece.isWhite ? self.blackKing! : self.whiteKing!
-        if piece.isPossibleMove(toCoordinates: enemyKing.coordinates) {
-            print("this piece [\(piece.name)] can attack \(enemyKing.isWhite ? "white" : "black") king")
+        let enemyKing = piece.isWhite ? self.blackKing : self.whiteKing
+        if piece.isPossibleMove(toCoordinates: enemyKing!.coordinates) {
+            print("this piece [\(piece.toString())] can attack \(enemyKing!.toString())")
             piece.potentialCheck = true
             print("potential check")
         }
@@ -223,26 +246,28 @@ public class Board {
     }
     
     func updatePotentialCheck() {
-        let allPieces = self.whitePieces + self.blackPieces
+        let allPieces = self.aliveWhitePieces + self.aliveBlackPieces
         for piece in allPieces {
             self.updatePotentialCheck(forPiece: piece)
         }
     }
     
     func updateActualCheck() {
-//        let pieces = (attackerIsWhite ? self.whitePieces : self.blackPieces).filter({ $0.potentialCheck })
-//        let enemyKing = attackerIsWhite ? self.blackKing! : self.whiteKing!
+        print(self.aliveWhitePieces.map({ $0.toString() }))
+        print(self.aliveBlackPieces.map({ $0.toString() }))
+        
         self.blackKing!.underCheck = false
         self.whiteKing!.underCheck = false
         
-        let allPieces = [self.whitePieces.filter({ $0.potentialCheck }), self.blackPieces.filter({ $0.potentialCheck })]
-        let kings = [self.blackKing!, self.whiteKing!]
+        let allPieces = [self.aliveWhitePieces.filter({ $0.potentialCheck }), self.aliveBlackPieces.filter({ $0.potentialCheck })]
+        let kings = [self.blackKing, self.whiteKing]
         
         for (pieces, king) in zip(allPieces, kings) {
             for piece in pieces {
-                let attackingMove = Move(from: piece.coordinates, to: king.coordinates)
+                let attackingMove = Move(from: piece.coordinates, to: king!.coordinates)
+                print("attacking move: \(attackingMove)")
                 if !self.isIllegalPass(attackingMove) {
-                    king.underCheck = true
+                    king!.underCheck = true
                     print("CHECK")
                 }
             }
@@ -272,8 +297,8 @@ public class Board {
         var rook: Rook? = nil
                 
         if isReverse {
-            king = self.getSquare(fromCoordinates: newKingPos).piece! as! King
-            rook = self.getSquare(fromCoordinates: newRookPos).piece! as! Rook
+            king = self.getSquare(fromCoordinates: newKingPos).piece! as? King
+            rook = self.getSquare(fromCoordinates: newRookPos).piece! as? Rook
             
             self.getSquare(fromCoordinates: newKingPos).removePiece()
             self.getSquare(fromCoordinates: newRookPos).removePiece()
@@ -285,8 +310,8 @@ public class Board {
             let kingSquare = self.getSquare(fromCoordinates: move.from)
             let rookSquare = self.getSquare(fromCoordinates: move.to)
             
-            king = kingSquare.piece! as! King
-            rook = rookSquare.piece! as! Rook
+            king = kingSquare.piece! as? King
+            rook = rookSquare.piece! as? Rook
             
             self.getSquare(fromCoordinates: newKingPos).piece = king
             self.getSquare(fromCoordinates: newRookPos).piece = rook
@@ -336,9 +361,85 @@ public class Board {
         return self.blackKing!.underCheck
     }
     
-    static func inBounds(coordinates: Coordinates) -> Bool {
-        return coordinates.row <= Self.MAXROW && coordinates.col <= Self.MAXROW
+    // only call this method when you know that king is under check
+    func isCheckMate(isWhite: Bool) -> Bool {
+        print("isCheckMate?")
+        let pieces = isWhite ? self.aliveWhitePieces : self.aliveBlackPieces
+        
+        for piece in pieces {
+            print("is checkmate validating piece: \(piece.toString())")
+            let possibleMoves = piece.getPossibleCoordinates().map({
+                Move(from: piece.coordinates, to: $0)
+            })
+            for var move in possibleMoves {
+                self.validateMove(&move)
+                if move.valid {
+                    print("found a valid move: \(move)")
+                    return false
+                }
+            }
+        }
+        self.checkMate = true
+        return true
     }
     
+    static func inBounds(coordinates: Coordinates) -> Bool {
+        return (0...Board.MAXROW).contains(coordinates.row) && (0...Board.MAXROW).contains(coordinates.col)
+    }
+    
+    
+}
+
+
+extension Board {
+    
+    func makeCopy() -> Board {
+        let board = Board()
+        
+        for row in self.squares {
+            var rowCopy: [Square] = []
+            for square in row {
+                let squareCopy = square.makeCopy()
+                rowCopy.append(squareCopy)
+                if !squareCopy.isEmpty && squareCopy.piece! is King {
+                    if squareCopy.piece!.isWhite {
+                        board.whiteKing = squareCopy.piece! as? King
+                    }
+                    else {
+                        board.blackKing = squareCopy.piece! as? King
+                    }
+                }
+            }
+            board.squares.append(rowCopy)
+        }
+        
+//        if let whiteKing = self.whiteKing {
+//            board.whiteKing = whiteKing.makeCopy()
+//        }
+//
+//        if let blackKing = self.blackKing {
+//            board.blackKing = blackKing.makeCopy()
+//        }
+        
+        board.checkMate = self.checkMate
+        
+        return board
+    }
+    
+    func printBoard() {
+        print("******************** BOARD ********************")
+        for row in self.squares {
+            let mapped = row.map { (square) -> String in
+                if square.isEmpty {
+                    return ""
+                }
+                else {
+                    return "\(square.piece!.isWhite ? "white" : "black") \(square.piece!.name)"
+                }
+            }
+            print(mapped)
+        }
+        print("******************** END ********************")
+    }
     
 }

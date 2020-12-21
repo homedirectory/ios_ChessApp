@@ -13,13 +13,16 @@ class ViewController: UIViewController, Storyboarded {
     weak var coordinator: Coordinator?
     private var selectedSquareCoordinates: Coordinates?
     private var board: Board?
+    private var gameEnded: Bool = false
 
     @IBOutlet weak var boardView: BoardView!
+    @IBOutlet weak var messageLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.board = Board()
+        self.board!.generate()
         
         self.boardView.setBoard(board: self.board!)
         self.view.bringSubviewToFront(self.boardView)
@@ -41,6 +44,10 @@ extension ViewController {
     
     private func handleTouch(_ touch: UITouch) {
         guard let board = self.board, let boardView = self.boardView else { return }
+        
+        if gameEnded {
+            return
+        }
         
         let touchedSquareCoordinates = self.getSquareCoordinates(fromTouch: touch)
                 
@@ -66,7 +73,12 @@ extension ViewController {
                 boardView.update(withMove: move)
                 // after a move was made there is no selected square
                 self.selectedSquareCoordinates = nil
-                // TODO: change side to move
+                
+                if board.checkMate {
+                    self.messageLabel.isHidden = false
+                    self.gameEnded = true
+                    return
+                }
             }
             
             // if move is not valid

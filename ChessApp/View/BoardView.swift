@@ -47,6 +47,7 @@ class BoardView: UIView {
     }
     
     func update(withMove move: Move) {
+        // special case for castling
         if move.isCastling {
             for coordinates in [move.from, move.to] + move.line {
                 let squareView = self.getSquareView(fromCoordinates: coordinates)

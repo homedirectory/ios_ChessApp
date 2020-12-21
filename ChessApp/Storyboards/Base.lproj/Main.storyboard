@@ -22,12 +22,20 @@
                                     <constraint firstAttribute="width" secondItem="Nom-nD-nCG" secondAttribute="height" multiplier="1:1" id="Kx0-nL-lUn"/>
                                 </constraints>
                             </view>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkmate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e1w-ob-rNr">
+                                <rect key="frame" x="145" y="201" width="124" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Nom-nD-nCG" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" priority="750" constant="10" id="19Q-aW-My7"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Nom-nD-nCG" secondAttribute="bottom" constant="10" id="373-cH-a8R"/>
                             <constraint firstItem="Nom-nD-nCG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="Akq-eP-AQ3"/>
+                            <constraint firstItem="e1w-ob-rNr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="L2C-Pr-Poq"/>
+                            <constraint firstItem="Nom-nD-nCG" firstAttribute="top" secondItem="e1w-ob-rNr" secondAttribute="bottom" constant="20" id="WZz-sp-6bN"/>
                             <constraint firstItem="Nom-nD-nCG" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Wiq-eZ-I00"/>
                             <constraint firstAttribute="trailing" secondItem="Nom-nD-nCG" secondAttribute="trailing" constant="10" id="Zov-qj-iM4"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Nom-nD-nCG" secondAttribute="trailing" constant="10" id="aD1-vi-x4i"/>
@@ -40,6 +48,7 @@
                     </view>
                     <connections>
                         <outlet property="boardView" destination="Nom-nD-nCG" id="wGg-oB-cfS"/>
+                        <outlet property="messageLabel" destination="e1w-ob-rNr" id="La0-WZ-Y5H"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

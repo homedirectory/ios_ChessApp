@@ -47,12 +47,21 @@ class BoardView: UIView {
     }
     
     func update(withMove move: Move) {
-        // update fromSquareView
-        let fromSquareView = self.getSquareView(fromCoordinates: move.from)
-        fromSquareView.update()
-        fromSquareView.highlightOff()
-        // update toSquareView
-        self.getSquareView(fromCoordinates: move.to).update()
+        if move.isCastling {
+            for coordinates in [move.from, move.to] + move.line {
+                let squareView = self.getSquareView(fromCoordinates: coordinates)
+                squareView.update()
+                squareView.highlightOff()
+            }
+        }
+        else {
+            // update fromSquareView
+            let fromSquareView = self.getSquareView(fromCoordinates: move.from)
+            fromSquareView.update()
+            fromSquareView.highlightOff()
+            // update toSquareView
+            self.getSquareView(fromCoordinates: move.to).update()
+        }
     }
     
     

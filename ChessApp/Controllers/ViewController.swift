@@ -71,8 +71,9 @@ extension ViewController {
             
             // if move is not valid
             else {
+                print("move is not valid: \(move)")
                 // 1) touched square is empty or contains a piece of different color from the selected one
-                if move.moveInvalidation! == .impossibleMove {
+                if move.moveInvalidation! == .impossibleMove || move.moveInvalidation! == .ownKingUnderCheck {
                     // UI: turn off highlighting
                     boardView.turnOffLastHighlighted()
                     self.selectedSquareCoordinates = nil
@@ -117,7 +118,6 @@ extension ViewController {
         guard let touch = touches.first else { return }
         // if the board was touched
         if boardView.subviews.contains(touch.view!) {
-            print("touch")
             self.handleTouch(touch)
         }
     }

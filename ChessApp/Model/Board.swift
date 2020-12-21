@@ -17,6 +17,14 @@ public class Board {
     var whiteKing: King? = nil
     var blackKing: King? = nil
     
+    var whitePieces : [Piece] {
+        return self.squares.flatMap({ $0 }).filter({ !$0.isEmpty && $0.piece!.isWhite }).map({ $0.piece! })
+    }
+    
+    var blackPieces : [Piece] {
+        return self.squares.flatMap({ $0 }).filter({ !$0.isEmpty && !$0.piece!.isWhite }).map({ $0.piece! })
+    }
+    
     init() {
         fillBoardWithEmptySquares()
         fillBoardWithPieces()
@@ -86,34 +94,70 @@ public class Board {
     
     // MARK: - Moving Logic
     
-    func makeMove(_ move: Move) {
-        if move.valid {
-            let fromSquare = self.getSquare(fromCoordinates: move.from)
-            let toSquare = self.getSquare(fromCoordinates: move.to)
-            fromSquare.piece!.moved = true
-            toSquare.removePiece()
-            toSquare.piece = fromSquare.piece
-            fromSquare.removePiece()
+    func makeMove(_ move: Move, isReverse: Bool = false) {
+        if isReverse {
+            print("making a reverse move")
+        }
+        var moveToMake = move
+        if isReverse {
+            moveToMake = move.reverse()
+        }
+        
+        if !isReverse && self.isCastling(move) {
+            self.castle(move)
+            return
+        }
+        
+        // update from square and to square
+        let fromSquare = self.getSquare(fromCoordinates: moveToMake.from)
+        let toSquare = self.getSquare(fromCoordinates: moveToMake.to)
+        toSquare.removePiece()
+        toSquare.piece = fromSquare.piece
+        fromSquare.removePiece()
+        toSquare.piece!.moved = !isReverse
+        // update potentialCheck for a moving piece
+        self.updatePotentialCheck(forPiece: toSquare.piece!)
+                
+        // when king moved - update potentialCheck for all pieces
+        if toSquare.piece! is King {
+            self.updatePotentialCheck()
+        }
+        // check all pieces with potentialCheck == true if they are actually checking the enemy King
+        self.updateActualCheck()
+        
+        if !isReverse {
+            print("move was made, white king under check: \(self.whiteKing!.underCheck), black king under check: \(self.blackKing!.underCheck)")
         }
     }
     
     func validateMove(_ move: inout Move) {
-        print("validating move from: \(move.from) to: \(move.to)")
+        print("--------- validating move from: \(move.from) to: \(move.to)")
         
         let fromSquare = self.getSquare(fromCoordinates: move.from)
         let toSquare = self.getSquare(fromCoordinates: move.to)
                 
-        guard let fromPiece = fromSquare.piece else { return }
+        guard let fromPiece = fromSquare.piece else {
+            print("fromSquare is empty")
+            return
+        }
+        
+        print("moving piece: \(fromPiece.name)")
         
         // 1) Check the toSquare
-            // contains a piece of the same color: return
-            // contains a piece of different color: continue
+            // contains a piece of the same color: move invalid and return
+            // TODO: Castling
         if !toSquare.isEmpty {
             if toSquare.piece!.equalColor(fromPiece) {
-                move.setInvalid(reason: .toOwnPiece)
-                return
+                print("castling: ", self.isCastling(move))
+                if !self.isCastling(move) {
+                    move.setInvalid(reason: .toOwnPiece)
+                    return
+                }
+                else {
+                    self.validateCastling(&move)
+                    return
+                }
             }
-            // TODO: Check if this move puts the King of fromPiece.color under check
         }
         
         // 2) Check if this piece can move like that
@@ -133,35 +177,157 @@ public class Board {
         
         // 4) Check if by making this move, a piece passes through other pieces illegally
         if !(fromPiece is Knight) {
-            // if this move is in a straight line (Rook, Queen, King and Pawn)
-            print("move line")
-            move.line.forEach({ print([$0.row, $0.col]) })
-            for coord in move.line {
-                if !self.getSquare(fromCoordinates: coord).isEmpty {
-                    move.setInvalid(reason: .impossibleMove)
-                    return
-                }
-                
+            if self.isIllegalPass(move) {
+                move.setInvalid(reason: .impossibleMove)
+                return
             }
         }
         
-        // 4) TODO: Check if the King is under check
+        // Check if after making this move the king is under check
+        self.makeMove(move)
+        print("made a move to test if king is under check")
         if isKingUnderCheck(isWhite: fromPiece.isWhite) {
-            // TODO: check if this move protects the king
+            print("after this move king is under check, invalid move, reversing")
+            move.setInvalid(reason: .ownKingUnderCheck)
+            self.makeMove(move, isReverse: true)
+            return
+        }
+        else {
+            print("after this move king is not under check, reversing")
+            self.makeMove(move, isReverse: true)
         }
         
         move.valid = true
         
     }
     
-    func updateKingUnderCheck(isWhite: Bool) {
-        let king = isWhite ? self.whiteKing! : self.blackKing!
-        
-        
-        
-         
+    func isIllegalPass(_ move: Move) -> Bool {
+        for coordinates in move.line {
+            if !self.getSquare(fromCoordinates: coordinates).isEmpty {
+                return true
+            }
+        }
+        return false
     }
     
+    func updatePotentialCheck(forPiece piece: Piece) {
+        let enemyKing = piece.isWhite ? self.blackKing! : self.whiteKing!
+        if piece.isPossibleMove(toCoordinates: enemyKing.coordinates) {
+            print("this piece [\(piece.name)] can attack \(enemyKing.isWhite ? "white" : "black") king")
+            piece.potentialCheck = true
+            print("potential check")
+        }
+        else {
+            piece.potentialCheck = false
+        }
+    }
+    
+    func updatePotentialCheck() {
+        let allPieces = self.whitePieces + self.blackPieces
+        for piece in allPieces {
+            self.updatePotentialCheck(forPiece: piece)
+        }
+    }
+    
+    func updateActualCheck() {
+//        let pieces = (attackerIsWhite ? self.whitePieces : self.blackPieces).filter({ $0.potentialCheck })
+//        let enemyKing = attackerIsWhite ? self.blackKing! : self.whiteKing!
+        self.blackKing!.underCheck = false
+        self.whiteKing!.underCheck = false
+        
+        let allPieces = [self.whitePieces.filter({ $0.potentialCheck }), self.blackPieces.filter({ $0.potentialCheck })]
+        let kings = [self.blackKing!, self.whiteKing!]
+        
+        for (pieces, king) in zip(allPieces, kings) {
+            for piece in pieces {
+                let attackingMove = Move(from: piece.coordinates, to: king.coordinates)
+                if !self.isIllegalPass(attackingMove) {
+                    king.underCheck = true
+                    print("CHECK")
+                }
+            }
+        }
+    }
+    
+    func isCastling(_ move: Move) -> Bool {
+        guard let fromPiece = self.getSquare(fromCoordinates: move.from).piece,
+            let toPiece = self.getSquare(fromCoordinates: move.to).piece else {
+            return false
+        }
+        
+        if fromPiece is King && toPiece is Rook && fromPiece.equalColor(toPiece) && !isIllegalPass(move) && !fromPiece.moved && !toPiece.moved {
+            return true
+        }
+        
+        return false
+    }
+    
+    func castle(_ move: Move, isReverse: Bool = false) {
+        let kingColDiffSign = (move.to.col - move.from.col) > 0 ? 1 : -1
+        
+        let newKingPos = move.from.addColumns(2 * kingColDiffSign)
+        let newRookPos = newKingPos.addColumns(-1 * kingColDiffSign)
+        
+        var king: King? = nil
+        var rook: Rook? = nil
+                
+        if isReverse {
+            king = self.getSquare(fromCoordinates: newKingPos).piece! as! King
+            rook = self.getSquare(fromCoordinates: newRookPos).piece! as! Rook
+            
+            self.getSquare(fromCoordinates: newKingPos).removePiece()
+            self.getSquare(fromCoordinates: newRookPos).removePiece()
+            
+            self.getSquare(fromCoordinates: move.from).piece = king
+            self.getSquare(fromCoordinates: move.to).piece = rook
+        }
+        else {
+            let kingSquare = self.getSquare(fromCoordinates: move.from)
+            let rookSquare = self.getSquare(fromCoordinates: move.to)
+            
+            king = kingSquare.piece! as! King
+            rook = rookSquare.piece! as! Rook
+            
+            self.getSquare(fromCoordinates: newKingPos).piece = king
+            self.getSquare(fromCoordinates: newRookPos).piece = rook
+            
+            kingSquare.removePiece()
+            rookSquare.removePiece()
+        }
+        
+        // update potentialCheck for a moving piece
+        self.updatePotentialCheck(forPiece: rook!)
+                
+        // when king moved (castling means king always moves) - update potentialCheck for all pieces
+        self.updatePotentialCheck()
+        // check all pieces with potentialCheck == true if they are actually checking the enemy King
+        self.updateActualCheck()
+        
+        if !isReverse {
+            print("move was made, white king under check: \(self.whiteKing!.underCheck), black king under check: \(self.blackKing!.underCheck)")
+        }
+        
+    }
+    
+    func validateCastling(_ move: inout Move) {
+        let king = self.getSquare(fromCoordinates: move.from).piece as! King
+        
+        self.castle(move)
+        print("made a move to test if king is under check")
+        if king.underCheck {
+            print("after this move king is under check, invalid move, reversing")
+            move.setInvalid(reason: .ownKingUnderCheck)
+            self.castle(move, isReverse: true)
+            return
+        }
+        else {
+            print("after this move king is not under check, reversing")
+            self.castle(move, isReverse: true)
+        }
+        
+        move.valid = true
+        move.isCastling = true
+    }
     
     func isKingUnderCheck(isWhite: Bool) -> Bool {
         if isWhite {

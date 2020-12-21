@@ -21,6 +21,8 @@ struct Move {
         return from.col != to.col && from.row != to.row
     }
     
+    var isCastling: Bool = false
+    
     var line: [Coordinates] {
         var coordinates: [Coordinates] = []
         
@@ -52,6 +54,10 @@ struct Move {
         self.moveInvalidation = reason
     }
     
+    func reverse() -> Move {
+        return Move(from: self.to, to: self.from)
+    }
+    
     
 }
 
@@ -61,7 +67,7 @@ extension Move {
     enum MoveInvalidation {
         case impossibleMove
         case toOwnPiece
-        case putsOwnKingUnderCheck
+        case ownKingUnderCheck
     }
     
 }

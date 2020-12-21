@@ -10,6 +10,10 @@ import Foundation
 
 
 class Pawn: Piece {
+    
+    override var name: String {
+        return "pawn"
+    }
         
     override init(isWhite: Bool) {
         super.init(isWhite: isWhite)
@@ -23,21 +27,32 @@ class Pawn: Piece {
         return coordinates
     }
     
-    func isValidMoveBySpecialRules(_ move: Move, toSquareIsEmpty: Bool) -> Bool {
-        // pawns can't move diagonally to an empty square
+    func isValidMoveBySpecialRules(_ move: Move, toSquareIsEnemy: Bool) -> Bool {
+        // pawns can eat on a diagonal
         if move.isDiagonal {
-            if toSquareIsEmpty {
-                return false
+            if toSquareIsEnemy {
+                return true
             }
         }
         // pawns can't eat on a straight line
         else {
-            if !toSquareIsEmpty {
+            if toSquareIsEnemy {
                 return false
             }
         }
         
         return true
     }
+    
+    override func makeCopy() -> Pawn {
+        let piece = Pawn(isWhite: self.isWhite)
+        piece.moved = self.moved
+        piece.potentialCheck = self.potentialCheck
+        piece.coordinates = self.coordinates
+        piece.dead = self.dead
+        
+        return piece
+    }
+    
     
 }

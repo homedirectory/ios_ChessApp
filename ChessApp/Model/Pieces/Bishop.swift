@@ -11,6 +11,10 @@ import Foundation
 
 class Bishop: Piece {
     
+    override var name: String {
+        return "bishop"
+    }
+    
     override init(isWhite: Bool) {
         super.init(isWhite: isWhite)
     }
@@ -19,4 +23,15 @@ class Bishop: Piece {
         return self.getCoordinatesOnDiagonals()
     }
     
+    override func makeCopy() -> Bishop {
+        let piece = Bishop(isWhite: self.isWhite)
+        piece.moved = self.moved
+        piece.potentialCheck = self.potentialCheck
+        piece.coordinates = self.coordinates
+        piece.dead = self.dead
+        
+        return piece
+    }
+    
 }
+

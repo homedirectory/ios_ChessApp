@@ -11,9 +11,15 @@ import Foundation
 
 public class Piece {
     
-    var name: String
     var isWhite: Bool = false
     var coordinates: Coordinates = Coordinates(row: 100, col: 100)
+    var dead: Bool = false {
+        didSet {
+            if oldValue == true {
+                self.dead = true
+            }
+        }
+    }
     var moved: Bool = false {
         didSet {
             if oldValue == true {
@@ -31,6 +37,10 @@ public class Piece {
         return self.coordinates.col
     }
     
+    var name: String {
+        return "piece"
+    }
+    
     var imageName: String {
         self.name.lowercased() + "-" + (self.isWhite ? "white" : "black")
     }
@@ -42,7 +52,6 @@ public class Piece {
     
     init(isWhite: Bool) {
         self.isWhite = isWhite
-        self.name = NSStringFromClass(type(of: self)).components(separatedBy: ".").last!
     }
     
     final public func equalColor(_ piece: Piece) -> Bool {
@@ -65,6 +74,16 @@ public class Piece {
         }
         
         return true
+    }
+    
+    func makeCopy() -> Piece {
+        let piece = Piece(isWhite: self.isWhite)
+        piece.moved = self.moved
+        piece.potentialCheck = self.potentialCheck
+        piece.coordinates = self.coordinates
+        piece.dead = self.dead
+        
+        return piece
     }
     
 }
@@ -154,6 +173,14 @@ extension Piece {
         }
         
         return coordinates
+    }
+    
+}
+
+extension Piece {
+    
+    func toString() -> String {
+        return "\(self.isWhite ? "white" : "black") \(self.name)"
     }
     
 }

@@ -11,6 +11,10 @@ import Foundation
 
 class King: Piece {
     
+    override var name: String {
+        return "king"
+    }
+    
     var underCheck: Bool = false
     
     override init(isWhite: Bool) {
@@ -22,6 +26,17 @@ class King: Piece {
         coordinates.append(contentsOf: self.getCoordinatesOnDiagonals(depth: 1))
         coordinates.append(contentsOf: self.getCoordinatesOnStraightLines(depth: 1))
         return coordinates
+    }
+    
+    override func makeCopy() -> King {
+        let piece = King(isWhite: self.isWhite)
+        piece.moved = self.moved
+        piece.potentialCheck = self.potentialCheck
+        piece.underCheck = self.underCheck
+        piece.coordinates = self.coordinates
+        piece.dead = self.dead
+        
+        return piece
     }
     
     func getTouchingSquaresCoordinates() -> [Coordinates] {
@@ -36,3 +51,4 @@ class King: Piece {
         
     
 }
+

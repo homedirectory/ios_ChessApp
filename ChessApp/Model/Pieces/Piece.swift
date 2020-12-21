@@ -14,7 +14,14 @@ public class Piece {
     var name: String
     var isWhite: Bool = false
     var coordinates: Coordinates = Coordinates(row: 100, col: 100)
-    var moved: Bool = false
+    var moved: Bool = false {
+        didSet {
+            if oldValue == true {
+                self.moved = true
+            }
+        }
+    }
+    var potentialCheck: Bool = false
     
     var row: Int {
         return self.coordinates.row

@@ -33,6 +33,9 @@ class Pawn: Piece {
             if toSquareIsEnemy {
                 return true
             }
+            else {
+                return false
+            }
         }
         // pawns can't eat on a straight line
         else {

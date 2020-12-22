@@ -52,6 +52,16 @@ struct Move {
         return coordinates
     }
     
+    init(from: Coordinates, to: Coordinates) {
+        self.from = from
+        self.to = to
+    }
+    
+    init(moveArray: [[Int]]) {
+        self.from = Coordinates(array: moveArray[0])
+        self.to = Coordinates(array: moveArray[1])
+    }
+    
     mutating func setInvalid(reason: MoveInvalidation) {
         print(reason)
         self.valid = false

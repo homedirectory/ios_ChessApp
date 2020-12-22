@@ -8,12 +8,16 @@
 
 import UIKit
 
-class ViewController: UIViewController, Storyboarded {
+class BoardViewController: UIViewController, Storyboarded {
     
     weak var coordinator: Coordinator?
     private var selectedSquareCoordinates: Coordinates?
     private var board: Board?
     private var gameEnded: Bool = false
+    var whiteToMove: Bool = true
+    var playerIsWhite: Bool = false
+    
+    var gameManager = GameManager.shared
 
     @IBOutlet weak var boardView: BoardView!
     @IBOutlet weak var messageLabel: UILabel!
@@ -27,12 +31,66 @@ class ViewController: UIViewController, Storyboarded {
         self.boardView.setBoard(board: self.board!)
         self.view.bringSubviewToFront(self.boardView)
         
+        // hmmmm
+        RealtimeDatabaseDelegate.shared.setObserver(key: self.gameManager.current!.id) { (dictionary) in
+            guard let board = self.board, let boardView = self.boardView else { return }
+            print("CALLBACK")
+            print(dictionary)
+            guard let dict = dictionary else { return }
+            do {
+                let game = try self.gameManager.decodeGame(from: dict)
+                print("decoded game success")
+                self.gameManager.updateGame(game)
+                self.gameManager.startGame()
+                if self.gameManager.didGameStart() && game.lastMoveExists() {
+                    let lastMove = game.lastMove
+                    if game.lastMoveIsWhite != self.playerIsWhite {
+                        let move = Move(moveArray: lastMove)
+                        // Model: make move
+                        board.makeMove(move)
+                        // UI: update boardView
+                        boardView.update(withMove: move)
+                        // all the other stuff
+                        self.whiteToMove = !self.whiteToMove
+                        
+                        if board.checkMate {
+                            self.endGame(message: "Checkmate")
+                            return
+                        }
+                        else if board.staleMate {
+                            self.endGame(message: "Stalemate")
+                            return
+                        }
+                        
+                        let whiteKingUnderCheck = board.isKingUnderCheck(isWhite: true)
+                        self.boardView.highlightCheck(kingCoordinates: board.whiteKing!.coordinates, turnOn: whiteKingUnderCheck, isWhite: true)
+                        
+                        let blackKingUnderCheck = board.isKingUnderCheck(isWhite: false)
+                        self.boardView.highlightCheck(kingCoordinates: board.blackKing!.coordinates, turnOn: blackKingUnderCheck, isWhite: false)
+                    }
+                }
+            } catch let err {
+                print("Error in callback: ", err)
+            }
+        }
+                
+        print("You are playing \(self.playerIsWhite ? "white" : "black") pieces.")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+    }
+    
+    func endGame(message: String) {
+        self.messageLabel.text = message
+        self.messageLabel.isHidden = false
+        self.gameManager.endGame()
     }
     
 
 }
 
-extension ViewController {
+extension BoardViewController {
     
     private func getSquareCoordinates(fromTouch touch: UITouch) -> Coordinates {
         let touchPos = touch.location(in: self.boardView)
@@ -43,11 +101,12 @@ extension ViewController {
     }
     
     private func handleTouch(_ touch: UITouch) {
-        guard let board = self.board, let boardView = self.boardView else { return }
         
-        if gameEnded {
+        if self.gameManager.didGameEnd() || !self.gameManager.didGameStart() {
             return
         }
+        
+        guard let board = self.board, let boardView = self.boardView else { return }
         
         let touchedSquareCoordinates = self.getSquareCoordinates(fromTouch: touch)
                 
@@ -70,24 +129,21 @@ extension ViewController {
             if move.valid {
                 // Model: make move
                 board.makeMove(move)
+                // Database: send move
+                self.gameManager.writeMove(move, isWhite: self.playerIsWhite)
                 // UI: update boardView
                 boardView.update(withMove: move)
-                if board.isKingUnderCheck(isWhite: true) {
-                    
-                }
+
                 // after a move was made there is no selected square
                 self.selectedSquareCoordinates = nil
+                self.whiteToMove = !self.whiteToMove
                 
                 if board.checkMate {
-                    self.messageLabel.text = "Checkmate"
-                    self.messageLabel.isHidden = false
-                    self.gameEnded = true
+                    self.endGame(message: "Checkmate")
                     return
                 }
                 else if board.staleMate {
-                    self.messageLabel.text = "Stalemate"
-                    self.messageLabel.isHidden = false
-                    self.gameEnded = true
+                    self.endGame(message: "Stalemate")
                     return
                 }
                 
@@ -127,11 +183,19 @@ extension ViewController {
             }
             // 2) touched square contains a piece
             else {
-                self.selectedSquareCoordinates = touchedSquareCoordinates
-                boardView.manageHighlighting(forCoordinates: touchedSquareCoordinates)
-                // a) enemy piece - do nothing
+                // manage moving in turns
+                if board.getSquare(fromCoordinates: touchedSquareCoordinates).piece!.isWhite == self.playerIsWhite &&
+                    self.whiteToMove == self.playerIsWhite {
+                    
+                    self.selectedSquareCoordinates = touchedSquareCoordinates
+                    boardView.manageHighlighting(forCoordinates: touchedSquareCoordinates)
+                    
+                }
+                else {
+                    return
+                }
                 
-                // b) own piece - select it and highlight
+                
             }
         }
         
@@ -141,7 +205,7 @@ extension ViewController {
 
 
 
-extension ViewController {
+extension BoardViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }

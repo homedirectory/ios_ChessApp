@@ -19,9 +19,16 @@ class Coordinator {
     }
     
     func start() {
-        let vc = ViewController.instantiate(storyboardName: "Main")
-        navController?.pushViewController(vc, animated: true)
+        let vc = MenuViewController.instantiate(storyboardName: "Main")
+        navController!.pushViewController(vc, animated: true)
         vc.coordinator = self
+    }
+    
+    func pushBoardViewController(playerIsWhite: Bool) {
+        let vc = BoardViewController.instantiate(storyboardName: "Main")
+        navController!.pushViewController(vc, animated: true)
+        vc.coordinator = self
+        vc.playerIsWhite = playerIsWhite
     }
 
     

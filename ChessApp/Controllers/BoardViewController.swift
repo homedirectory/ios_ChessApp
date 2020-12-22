@@ -31,6 +31,12 @@ class BoardViewController: UIViewController, Storyboarded {
         self.boardView.setBoard(board: self.board!)
         self.view.bringSubviewToFront(self.boardView)
         
+        if let game = self.gameManager.current {
+            if !(game.player1 && game.player2) {
+                self.showMessage(message: "Waiting for a player to join...")
+            }
+        }
+        
         // hmmmm
         RealtimeDatabaseDelegate.shared.setObserver(key: self.gameManager.current!.id) { (dictionary) in
             guard let board = self.board, let boardView = self.boardView else { return }
@@ -42,49 +48,56 @@ class BoardViewController: UIViewController, Storyboarded {
                 print("decoded game success")
                 self.gameManager.updateGame(game)
                 self.gameManager.startGame()
-                if self.gameManager.didGameStart() && game.lastMoveExists() {
-                    let lastMove = game.lastMove
-                    if game.lastMoveIsWhite != self.playerIsWhite {
-                        let move = Move(moveArray: lastMove)
-                        // Model: make move
-                        board.makeMove(move)
-                        // UI: update boardView
-                        boardView.update(withMove: move)
-                        // all the other stuff
-                        self.whiteToMove = !self.whiteToMove
-                        
-                        if board.checkMate {
-                            self.endGame(message: "Checkmate")
-                            return
+                
+                if self.gameManager.didGameStart() {
+                    self.showMessage(message: "")
+                    if game.lastMoveExists() {
+                        let lastMove = game.lastMove
+                        if game.lastMoveIsWhite != self.playerIsWhite {
+                            let move = Move(moveArray: lastMove)
+                            // Model: make move
+                            board.makeMove(move)
+                            // UI: update boardView
+                            boardView.update(withMove: move)
+                            // all the other stuff
+                            self.whiteToMove = !self.whiteToMove
+                            
+                            if board.checkMate {
+                                self.endGame(message: "Checkmate")
+                                return
+                            }
+                            else if board.staleMate {
+                                self.endGame(message: "Stalemate")
+                                return
+                            }
+                            
+                            let whiteKingUnderCheck = board.isKingUnderCheck(isWhite: true)
+                            self.boardView.highlightCheck(kingCoordinates: board.whiteKing!.coordinates, turnOn: whiteKingUnderCheck, isWhite: true)
+                            
+                            let blackKingUnderCheck = board.isKingUnderCheck(isWhite: false)
+                            self.boardView.highlightCheck(kingCoordinates: board.blackKing!.coordinates, turnOn: blackKingUnderCheck, isWhite: false)
                         }
-                        else if board.staleMate {
-                            self.endGame(message: "Stalemate")
-                            return
-                        }
-                        
-                        let whiteKingUnderCheck = board.isKingUnderCheck(isWhite: true)
-                        self.boardView.highlightCheck(kingCoordinates: board.whiteKing!.coordinates, turnOn: whiteKingUnderCheck, isWhite: true)
-                        
-                        let blackKingUnderCheck = board.isKingUnderCheck(isWhite: false)
-                        self.boardView.highlightCheck(kingCoordinates: board.blackKing!.coordinates, turnOn: blackKingUnderCheck, isWhite: false)
                     }
                 }
             } catch let err {
                 print("Error in callback: ", err)
             }
         }
-                
         print("You are playing \(self.playerIsWhite ? "white" : "black") pieces.")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        
+        self.gameManager.killGame()
     }
     
     func endGame(message: String) {
+        self.showMessage(message: message)
+        self.gameManager.endGame()
+    }
+    
+    func showMessage(message: String) {
         self.messageLabel.text = message
         self.messageLabel.isHidden = false
-        self.gameManager.endGame()
     }
     
 

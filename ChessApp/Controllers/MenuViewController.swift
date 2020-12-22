@@ -19,13 +19,6 @@ class MenuViewController: UIViewController, Storyboarded {
     
     override func viewDidLoad() {
         
-//        var result: Game? = nil
-//
-//        RealtimeDatabaseDelegate.shared.getFirstUnjoinedGame(completion: { res in
-//            result = res
-//            print(result?.id)
-//            print(type(of: result))
-//        })
         
         
     }

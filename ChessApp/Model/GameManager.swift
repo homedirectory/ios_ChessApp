@@ -16,7 +16,7 @@ public class GameManager {
     var databaseDelegate = RealtimeDatabaseDelegate.shared
     
     var current: Game?
-    
+        
     private init() { }
     
     func createGame(completion: (() -> ())? = nil) {
@@ -33,6 +33,10 @@ public class GameManager {
             guard let dict = dictionary else { return }
             print("JOIN GAME DICTIONARY")
             print(dict)
+            if dict.count == 0 {
+                print("No games were found")
+                return
+            }
             
             do {
                 let games = try self.decodedGamesDictionary(from: dict)
@@ -72,6 +76,10 @@ public class GameManager {
     }
     
     func killGame() {
+        guard let game = self.current else { return }
+        self.endGame()
+        print("killing game")
+        self.databaseDelegate.removeAllObservers(forChild: game.id)
         self.current = nil
     }
     

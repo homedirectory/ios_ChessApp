@@ -38,7 +38,7 @@ class RealtimeDatabaseDelegate {
         }
     }
     
-    func setObserver(key: String, callback: @escaping (NSDictionary?) -> ()) {
+    func setObserver(key: String, callback: @escaping (NSDictionary?) -> ()){
         self.databaseRef.child(key).observe(.value) { (snapshot) in
             guard let newValue = snapshot.value as? NSDictionary else {
                 callback([:])
@@ -47,6 +47,16 @@ class RealtimeDatabaseDelegate {
             
             callback(newValue)
         }
+    }
+    
+    func removeObserver(withHandle handle: UInt) {
+        print("removing observer: \(handle)")
+        self.databaseRef.removeObserver(withHandle: handle)
+    }
+    
+    func removeAllObservers(forChild child: String) {
+        print("removing all observers for child: \(child)")
+        self.databaseRef.child(child).removeAllObservers()
     }
     
 }

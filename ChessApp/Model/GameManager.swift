@@ -31,7 +31,6 @@ public class GameManager {
     func joinGame(completion: (() -> ())?) {
         self.databaseDelegate.getAll { (dictionary) in
             guard let dict = dictionary else { return }
-            print("JOIN GAME DICTIONARY")
             print(dict)
             if dict.count == 0 {
                 print("No games were found")
@@ -42,7 +41,7 @@ public class GameManager {
                 let games = try self.decodedGamesDictionary(from: dict)
                 
                 for game in games.values {
-                    if !game.player2 {
+                    if !game.player2 && !game.abandoned {
                         game.player2 = true
                         game.started = true
                         self.current = game
@@ -75,24 +74,23 @@ public class GameManager {
         game.ended = true
     }
     
-    func killGame() {
+    // basically - leave game
+    func killGame(delete: Bool) {
         guard let game = self.current else { return }
-        self.endGame()
         print("killing game")
+        self.endGame()
+        game.abandoned = true
         self.databaseDelegate.removeAllObservers(forChild: game.id)
-        self.current = nil
+        
+        if delete {
+            self.databaseDelegate.delete(key: game.id)
+            return
+        }
+        
+        self.encodeAndWrite(game, completion: {
+            self.current = nil
+        })
     }
-    
-    func didGameEnd() -> Bool {
-        guard let game = self.current else { return false }
-        return game.ended
-    }
-    
-    func didGameStart() -> Bool {
-        guard let game = self.current else { return false }
-        return game.started
-    }
-    
     
     func writeMove(_ move: Move, isWhite: Bool) {
         guard let game = self.current else { return }
@@ -117,13 +115,13 @@ public class GameManager {
         return games
     }
     
-    func decodeGame(from dictionary: NSDictionary) throws -> Game {
+    func decodeGame(from dictionary: NSDictionary) throws {
         print("DECODING A SINGLE GAME")
         print(dictionary)
         let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted)
         let game = try JSONDecoder().decode(Game.self, from: jsonData)
         
-        return game
+        self.current = game
     }
     
 }

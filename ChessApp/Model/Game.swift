@@ -11,8 +11,10 @@ import Foundation
 
 class Game: Decodable, Encodable {
     
+    static let DEFAULT_LAST_MOVE: [[Int]] = [[0], [0]]
+    
     enum CodingKeys: String, CodingKey {
-        case id, player1, player2, lastMove, lastMoveIsWhite
+        case id, player1, player2, lastMove, lastMoveIsWhite, abandoned
     }
     
     var id: String
@@ -20,16 +22,18 @@ class Game: Decodable, Encodable {
     var player2: Bool
     var lastMove: [[Int]]
     var lastMoveIsWhite: Bool
+    var abandoned: Bool
     
     var started: Bool = false
     var ended: Bool = false
     
-    init(id: String = "", player1: Bool, player2: Bool, lastMove: [[Int]] = [[0], [0]], lastMoveIsWhite: Bool = false) {
+    init(id: String = "", player1: Bool, player2: Bool, lastMove: [[Int]] = Game.DEFAULT_LAST_MOVE, lastMoveIsWhite: Bool = false, abandoned: Bool = false) {
         self.id = id.isEmpty ? UUID().uuidString : id
         self.player1 = player1
         self.player2 = player2
         self.lastMove = lastMove
         self.lastMoveIsWhite = lastMoveIsWhite
+        self.abandoned = abandoned
     }
     
     required init(from decoder: Decoder) throws {
@@ -40,6 +44,7 @@ class Game: Decodable, Encodable {
         self.player2 = try container.decode(Bool.self, forKey: .player2)
         self.lastMove = try container.decode([[Int]].self, forKey: .lastMove)
         self.lastMoveIsWhite = try container.decode(Bool.self, forKey: .lastMoveIsWhite)
+        self.abandoned = try container.decode(Bool.self, forKey: .abandoned)
     }
     
     func encoded() -> Dictionary<String, Any> {
@@ -47,13 +52,35 @@ class Game: Decodable, Encodable {
                                           "player1" : self.player1,
                                           "player2" : self.player2,
                                           "lastMove" : self.lastMove,
-                                          "lastMoveIsWhite" : self.lastMoveIsWhite]
+                                          "lastMoveIsWhite" : self.lastMoveIsWhite,
+                                          "abandoned" : self.abandoned]
         
         return dictionary
     }
     
-    func lastMoveExists() -> Bool {
-        return !self.lastMove.isEmpty && self.lastMove != [[0], [0]]
+    func getLastMove() -> [[Int]]? {
+        if !self.lastMove.isEmpty && self.lastMove != Game.DEFAULT_LAST_MOVE {
+            return self.lastMove
+        }
+        return nil
+    }
+    
+}
+
+
+extension Game {
+    
+    func toString() -> String {
+        return """
+                id: \(self.id)
+                player1: \(self.player1)
+                player2: \(self.player2)
+                lastMove: \(self.lastMove)
+                lastMoveIsWhite: \(self.lastMoveIsWhite)
+                abandoned: \(self.abandoned)
+                started: \(self.started)
+                ended: \(self.ended)
+                """
     }
     
 }

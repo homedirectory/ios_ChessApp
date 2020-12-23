@@ -31,29 +31,39 @@ class BoardViewController: UIViewController, Storyboarded {
         self.boardView.setBoard(board: self.board!)
         self.view.bringSubviewToFront(self.boardView)
         
-        if let game = self.gameManager.current {
-            if !(game.player1 && game.player2) {
+        self.messageLabel.adjustsFontSizeToFitWidth = true
+        
+        guard let game = self.gameManager.current else { return }
+        
+        if !game.started {
                 self.showMessage(message: "Waiting for a player to join...")
             }
-        }
         
         // hmmmm
-        RealtimeDatabaseDelegate.shared.setObserver(key: self.gameManager.current!.id) { (dictionary) in
+        RealtimeDatabaseDelegate.shared.setObserver(key: game.id) { (dictionary) in
+            print("callback")
             guard let board = self.board, let boardView = self.boardView else { return }
-            print("CALLBACK")
-            print(dictionary)
             guard let dict = dictionary else { return }
             do {
-                let game = try self.gameManager.decodeGame(from: dict)
+                try self.gameManager.decodeGame(from: dict)
                 print("decoded game success")
-                self.gameManager.updateGame(game)
+                
+                // game will start only if two players joined
                 self.gameManager.startGame()
                 
-                if self.gameManager.didGameStart() {
+                // another guard let is needed here because game was updated after decoding and starting
+                guard let currentGame = self.gameManager.current else { return }
+                
+                if currentGame.started {
+                    
+                    if currentGame.abandoned {
+                        self.showMessage(message: "The other player abandoned the game")
+                        return
+                    }
+                    
                     self.showMessage(message: "")
-                    if game.lastMoveExists() {
-                        let lastMove = game.lastMove
-                        if game.lastMoveIsWhite != self.playerIsWhite {
+                    guard let lastMove = currentGame.getLastMove() else { return }
+                    if currentGame.lastMoveIsWhite != self.playerIsWhite {
                             let move = Move(moveArray: lastMove)
                             // Model: make move
                             board.makeMove(move)
@@ -77,7 +87,6 @@ class BoardViewController: UIViewController, Storyboarded {
                             let blackKingUnderCheck = board.isKingUnderCheck(isWhite: false)
                             self.boardView.highlightCheck(kingCoordinates: board.blackKing!.coordinates, turnOn: blackKingUnderCheck, isWhite: false)
                         }
-                    }
                 }
             } catch let err {
                 print("Error in callback: ", err)
@@ -87,12 +96,13 @@ class BoardViewController: UIViewController, Storyboarded {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        self.gameManager.killGame()
+        guard let game = self.gameManager.current else { return }
+        self.gameManager.killGame(delete: !game.started || (game.abandoned))
     }
     
     func endGame(message: String) {
-        self.showMessage(message: message)
         self.gameManager.endGame()
+        self.showMessage(message: message)
     }
     
     func showMessage(message: String) {
@@ -115,7 +125,9 @@ extension BoardViewController {
     
     private func handleTouch(_ touch: UITouch) {
         
-        if self.gameManager.didGameEnd() || !self.gameManager.didGameStart() {
+        guard let game = self.gameManager.current else { return }
+        
+        if game.ended || !game.started || game.abandoned {
             return
         }
         

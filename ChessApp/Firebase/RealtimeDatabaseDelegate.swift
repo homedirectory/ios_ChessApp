@@ -27,6 +27,10 @@ class RealtimeDatabaseDelegate {
         }
     }
     
+    func delete(key: String) {
+        self.databaseRef.child(key).removeValue()
+    }
+    
     func getAll(completion: @escaping ((NSDictionary?) -> ())) {
         self.databaseRef.observeSingleEvent(of: .value) { (snapshot) in
             guard let result = snapshot.value as? NSDictionary else {

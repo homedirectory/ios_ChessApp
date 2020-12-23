@@ -111,6 +111,7 @@ public class Board {
     func makeMove(_ move: Move, callIsCheckMate: Bool = true) {
                 
         if self.isCastling(move) {
+            print("CASTLING")
             self.castle(move)
             return
         }

@@ -53,18 +53,22 @@ class BoardViewController: UIViewController, Storyboarded {
                 
                 // another guard let is needed here because game was updated after decoding and starting
                 guard let currentGame = self.gameManager.current else { return }
-                
+                print("Current game started: \(currentGame.started), ended: \(currentGame.ended)")
                 if currentGame.started {
+                    
+                    if !currentGame.ended {
+                        self.showMessage(message: "")
+                    }
                     
                     if currentGame.abandoned {
                         self.showMessage(message: "The other player abandoned the game")
                         return
                     }
                     
-                    self.showMessage(message: "")
                     guard let lastMove = currentGame.getLastMove() else { return }
                     if currentGame.lastMoveIsWhite != self.playerIsWhite {
-                            let move = Move(moveArray: lastMove)
+                            var move = Move(moveArray: lastMove)
+                            move.isCastling = currentGame.lastMoveIsCastling
                             // Model: make move
                             board.makeMove(move)
                             // UI: update boardView
@@ -74,11 +78,10 @@ class BoardViewController: UIViewController, Storyboarded {
                             
                             if board.checkMate {
                                 self.endGame(message: "Checkmate")
-                                return
+                                print("CHECKMATE ENDING GAME")
                             }
                             else if board.staleMate {
                                 self.endGame(message: "Stalemate")
-                                return
                             }
                             
                             let whiteKingUnderCheck = board.isKingUnderCheck(isWhite: true)
@@ -154,8 +157,6 @@ extension BoardViewController {
             if move.valid {
                 // Model: make move
                 board.makeMove(move)
-                // Database: send move
-                self.gameManager.writeMove(move, isWhite: self.playerIsWhite)
                 // UI: update boardView
                 boardView.update(withMove: move)
 
@@ -165,12 +166,13 @@ extension BoardViewController {
                 
                 if board.checkMate {
                     self.endGame(message: "Checkmate")
-                    return
                 }
                 else if board.staleMate {
                     self.endGame(message: "Stalemate")
-                    return
                 }
+                
+                // Database: send move
+                self.gameManager.writeMove(move, isWhite: self.playerIsWhite)
                 
                 let whiteKingUnderCheck = board.isKingUnderCheck(isWhite: true)
                 self.boardView.highlightCheck(kingCoordinates: board.whiteKing!.coordinates, turnOn: whiteKingUnderCheck, isWhite: true)

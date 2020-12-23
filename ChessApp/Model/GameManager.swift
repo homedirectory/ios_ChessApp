@@ -97,6 +97,8 @@ public class GameManager {
         let moveArr = [move.from.toArray(), move.to.toArray()]
         game.lastMove = moveArr
         game.lastMoveIsWhite = isWhite
+        game.lastMoveIsCastling = move.isCastling
+        print("writing move, game ended: \(game.ended)")
         
         self.encodeAndWrite(game)
     }
